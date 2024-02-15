@@ -12,7 +12,6 @@ public class AllCompensationsListDto
 
     public AllCompensationsListDto(IEnumerable<Compensation> compensations, List<Employee> employees)
     {
-        //Items = compensations.GroupBy(x => x.EmployeeId).Select(x => new ItemDto(x.ToList()));
         Items = compensations.GroupBy(x => x.EmployeeId)
                      .Select(x => new ItemDto(x.ToList(), employees.FirstOrDefault(employee => employee.Id == x.Key)));
         TotalAmount = Math.Round(compensations.Sum(x => x.Amount), 2);
