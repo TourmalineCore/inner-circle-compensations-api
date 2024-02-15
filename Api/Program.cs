@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Api;
 using TourmalineCore.AspNetCore.JwtAuthentication.Core;
 using TourmalineCore.AspNetCore.JwtAuthentication.Core.Options;
+using Application.Services.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,6 +117,7 @@ builder.Host.ConfigureLogging((hostingContext, logging) =>
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(configuration);
+builder.Services.Configure<InnerCircleServiceUrls>(configuration.GetSection(nameof(InnerCircleServiceUrls)));
 
 var app = builder.Build();
 
