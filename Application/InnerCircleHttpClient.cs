@@ -1,7 +1,7 @@
-using System.Text.Json;
 using Application.Services.Options;
 using Core;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace Application;
 
@@ -21,7 +21,7 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
         var link = $"{_urls.SalaryServiceUrl}/internal/get-employee?corporateEmail={corporateEmail}";
         var response = await _client.GetStringAsync(link);
 
-        return JsonSerializer.Deserialize<Employee>(response);
+        return JsonConvert.DeserializeObject<Employee>(response);
     }
 
     public async Task<List<Employee>> GetEmployeesAsync()
@@ -29,6 +29,7 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
         var link = $"{_urls.SalaryServiceUrl}/internal/get-employees";
         var response = await _client.GetStringAsync(link);
 
-        return JsonSerializer.Deserialize<List<Employee>>(response);
+        return JsonConvert.DeserializeObject<List<Employee>>(response);
+
     }
 }
