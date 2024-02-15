@@ -16,8 +16,6 @@ public class Compensation
 
     public long EmployeeId { get; private set; }
 
-    public string EmployeeFullName { get; set; }
-
     public Instant DateCreateCompensation { get; private set; }
 
     public Instant DateCompensation { get; private set; }
@@ -38,7 +36,6 @@ public class Compensation
         Comment = comment;
         Amount = amount;
         IsPaid = isPaid;
-        EmployeeFullName = employee.FullName;
         EmployeeId = employee.Id;
         DateCreateCompensation = SystemClock.Instance.GetCurrentInstant();
         DateCompensation = Instant.FromDateTimeUtc(DateTime.SpecifyKind(DateTime.Parse(dateCompensation), DateTimeKind.Utc));
