@@ -4,11 +4,11 @@ namespace Application.Dtos;
 
 public class AllCompensationsListDto
 {
-    public double TotalAmount { get; init; }
+    public double TotalAmount { get; }
 
-    public double TotalUnpaidAmount { get; init; }
+    public double TotalUnpaidAmount { get; }
 
-    public IEnumerable<ItemDto> Items { get; init; }
+    public IEnumerable<ItemDto> Items { get; }
 
     public AllCompensationsListDto(IEnumerable<Compensation> compensations, List<Employee> employees)
     {
@@ -21,19 +21,19 @@ public class AllCompensationsListDto
 
 public class ItemDto
 {
-    public string EmployeeFullName { get; init; }
+    public string EmployeeFullName { get; }
 
-    public long EmployeeId { get; init; }
+    public long EmployeeId { get; }
 
-    public string DateCompensation { get; init; }
+    public string DateCompensation { get; }
 
-    public double TotalAmount { get; init; }
+    public double TotalAmount { get; }
 
-    public double UnpaidAmount { get; init; }
+    public double UnpaidAmount { get; }
 
-    public bool IsPaid { get; init; }
+    public bool IsPaid { get; }
 
-    public IEnumerable<EmployeeCompensationDto> Compensations { get; init; }
+    public IEnumerable<EmployeeCompensationDto> Compensations { get; }
 
     public ItemDto(List<Compensation> employeeCompensations, Employee employee)
     {
@@ -49,15 +49,15 @@ public class ItemDto
 
 public class EmployeeCompensationDto
 {
-    public long Id { get; init; }
+    public long Id { get; }
 
-    public string CompensationType { get; init; }
+    public string CompensationType { get; }
 
-    public string? Comment { get; init; }
+    public string? Comment { get; }
 
-    public double Amount { get; init; }
+    public double Amount { get; }
 
-    public string DateCreateCompensation { get; init; }
+    public string DateCreateCompensation { get; }
 
     public EmployeeCompensationDto(Compensation compensation)
     {

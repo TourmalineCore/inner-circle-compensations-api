@@ -4,9 +4,9 @@ namespace Application.Dtos;
 
 public class PersonalCompensationListDto
 {
-    public List<PersonalCompensationItemDto> List { get; init; }
+    public List<PersonalCompensationItemDto> List { get; }
 
-    public double TotalUnpaidAmount { get; init; }
+    public double TotalUnpaidAmount { get; }
 
     public PersonalCompensationListDto(List<PersonalCompensationItemDto> compensationList, double totalUnpaidAmount)
     {
@@ -17,19 +17,19 @@ public class PersonalCompensationListDto
 
 public class PersonalCompensationItemDto
 {
-    public long Id { get; init; }
+    public long Id { get; }
 
-    public string? Comment { get; init; }
+    public string? Comment { get; }
 
-    public double Amount { get; init; }
+    public double Amount { get; }
 
-    public bool IsPaid { get; init; }
+    public bool IsPaid { get; }
 
-    public string CompensationType { get; init; }
+    public string CompensationType { get; }
 
-    public string DateCreateCompensation { get; init; }
+    public string DateCreateCompensation { get; }
 
-    public string DateCompensation { get; init; }
+    public string DateCompensation { get; }
 
     public PersonalCompensationItemDto(long id, string? comment, double amount, bool isPaid, long typeId, string dateCreateCompensation, string dateCompensation)
     {
