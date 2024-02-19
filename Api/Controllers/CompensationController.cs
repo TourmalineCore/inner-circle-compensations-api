@@ -41,7 +41,7 @@ public class CompensationController : Controller
     [HttpGet("types")]
     public List<CompensationType> GetTypes()
     {
-        return _compensationsService.GetTypes();
+        return CompensationsService.GetTypes();
     }
 
     [RequiresPermission(UserClaimsProvider.CanManageCompensations)]
