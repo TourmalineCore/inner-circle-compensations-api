@@ -13,7 +13,7 @@ namespace Api.Controllers;
 public class CompensationController : Controller
 {
     private readonly CompensationsService _compensationsService;
-    private readonly InnerCircleHttpClient _client;
+    private readonly  IInnerCircleHttpClient _client;
 
     public CompensationController(CompensationsService compensationsService, InnerCircleHttpClient client)
     {
@@ -39,9 +39,9 @@ public class CompensationController : Controller
 
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
     [HttpGet("types")]
-    public async Task<List<CompensationType>> GetTypesAsync()
+    public List<CompensationType> GetTypes()
     {
-        return await _compensationsService.GetTypesAsync();
+        return _compensationsService.GetTypes();
     }
 
     [RequiresPermission(UserClaimsProvider.CanManageCompensations)]

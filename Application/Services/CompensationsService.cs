@@ -20,7 +20,7 @@ public class CompensationsService
         _compensationStatusUpdateCommand = compensationStatusUpdateCommand;
     }
 
-    public async Task<List<CompensationType>> GetTypesAsync()
+    public List<CompensationType> GetTypes()
     {
         return CompensationTypes.GetTypeList();
     }
