@@ -20,7 +20,7 @@ public class CompensationsService
         _compensationStatusUpdateCommand = compensationStatusUpdateCommand;
     }
 
-    public List<CompensationType> GetTypes()
+    public static List<CompensationType> GetTypes()
     {
         return CompensationTypes.GetTypeList();
     }
