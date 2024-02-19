@@ -14,14 +14,6 @@ public class CompensationsQuery : ICompensationsQuery
         _context = context;
     }
 
-    public async Task<IEnumerable<Compensation>> GetCompensationsAsync()
-    {
-        return await _context
-            .Compensations
-            .AsNoTracking()
-            .ToListAsync();
-    }
-
     public async Task<IEnumerable<Compensation>> GetCompensationsAsync(int year, int month)
     {
         return await _context
