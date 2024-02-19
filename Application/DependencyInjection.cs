@@ -14,6 +14,6 @@ public static class DependencyInjection
         services.AddTransient<CompensationsService>();
         services.AddTransient<ICompensationsQuery, CompensationsQuery>();
         services.AddTransient<CompensationStatusUpdateCommand>();
-        services.AddTransient<InnerCircleHttpClient>();
+        services.AddTransient<IInnerCircleHttpClient, InnerCircleHttpClient>();
     }
 }

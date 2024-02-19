@@ -15,7 +15,7 @@ public class CompensationController : Controller
     private readonly CompensationsService _compensationsService;
     private readonly  IInnerCircleHttpClient _client;
 
-    public CompensationController(CompensationsService compensationsService, InnerCircleHttpClient client)
+    public CompensationController(CompensationsService compensationsService, IInnerCircleHttpClient client)
     {
         _compensationsService = compensationsService;
         _client = client;
