@@ -8,10 +8,10 @@ public class PersonalCompensationListDto
 
     public double TotalUnpaidAmount { get; }
 
-    public PersonalCompensationListDto(List<PersonalCompensationItemDto> compensationList, double totalUnpaidAmount)
+    public PersonalCompensationListDto(IEnumerable<Compensation> compensations)
     {
-        List = compensationList;
-        TotalUnpaidAmount = totalUnpaidAmount;
+        List = compensations.Select(x => new PersonalCompensationItemDto(x.Id, x.Comment, x.Amount, x.IsPaid, x.TypeId, x.DateCreateCompensation.ToString(), x.DateCompensation.ToString())).ToList();
+        TotalUnpaidAmount = Math.Round(compensations.Where(compensation => compensation.IsPaid == false).Sum(x => x.Amount), 2);
     }
 }
 
