@@ -53,9 +53,8 @@ public class CompensationsService
     {
         var compensations = await _compensationsQuery.GetCompensationsByIdsAsync(compensationsIds);
 
-        foreach (var compensation in compensations)
+        foreach (var compensation in compensations.Where(compensation => !compensation.IsPaid))
         {
-            if (compensation.IsPaid) { continue; }
             compensation.IsPaid = true;
         }
 
