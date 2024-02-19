@@ -25,7 +25,7 @@ public class CompensationsService
         return CompensationTypes.GetTypeList();
     }
 
-    public async Task<PersonalCompensationListDto> GetAllAsync(Employee employee)
+    public async Task<PersonalCompensationListDto> GetEmployeeCompensationsAsync(Employee employee)
     {
         var compensations = await _compensationsQuery.GetPersonalCompensationsAsync(employee.Id);
 

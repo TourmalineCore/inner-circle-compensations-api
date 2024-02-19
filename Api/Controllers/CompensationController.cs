@@ -31,10 +31,10 @@ public class CompensationController : Controller
 
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
     [HttpGet("all")]
-    public async Task<PersonalCompensationListDto> GetAllAsync()
+    public async Task<PersonalCompensationListDto> GetEmployeeCompensationsAsync()
     {
         var employee = await _client.GetEmployeeAsync(User.GetCorporateEmail());
-        return await _compensationsService.GetAllAsync(employee);
+        return await _compensationsService.GetEmployeeCompensationsAsync(employee);
     }
 
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
