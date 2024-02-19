@@ -7,9 +7,9 @@ public class CompensationStatusUpdateCommand
 {
     private readonly CompensationsDbContext _context;
 
-    public CompensationStatusUpdateCommand(CompensationsDbContext CompensationsDbContext)
+    public CompensationStatusUpdateCommand(CompensationsDbContext сompensationsDbContext)
     {
-        _context = CompensationsDbContext;
+        _context = сompensationsDbContext;
     }
 
     public async Task ExecuteAsync(List<Compensation> compensations)

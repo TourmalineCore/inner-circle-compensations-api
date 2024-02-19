@@ -8,9 +8,9 @@ public class CompensationCreationCommand
 {
     private readonly CompensationsDbContext _context;
 
-    public CompensationCreationCommand(CompensationsDbContext CompensationsDbContext)
+    public CompensationCreationCommand(CompensationsDbContext сompensationsDbContext)
     {
-        _context = CompensationsDbContext;
+        _context = сompensationsDbContext;
     }
 
     public async Task ExecuteAsync(CompensationCreateDto dto, Employee employee)
