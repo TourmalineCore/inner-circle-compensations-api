@@ -9,6 +9,7 @@ using Api;
 using TourmalineCore.AspNetCore.JwtAuthentication.Core;
 using TourmalineCore.AspNetCore.JwtAuthentication.Core.Options;
 using Application.Services.Options;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,68 +53,51 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+
+var env = builder.Environment;
 var configuration = builder.Configuration;
+var reloadOnChange = configuration.GetValue("hostBuilder:reloadConfigOnChange", true);
 
-builder.Host.ConfigureAppConfiguration((hostingContext, config) =>
+configuration.AddJsonFile("appsettings.json", true, reloadOnChange)
+    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, reloadOnChange)
+    .AddJsonFile("appsettings.Active.json", true, reloadOnChange)
+    .AddJsonFile("swagger.json", true, reloadOnChange);
+
+if (env.IsDevelopment() && !string.IsNullOrEmpty(env.ApplicationName))
 {
-    var env = hostingContext.HostingEnvironment;
+    var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+    configuration.AddUserSecrets(appAssembly, true);
+}
 
-    var reloadOnChange = hostingContext.Configuration.GetValue("hostBuilder:reloadConfigOnChange", true);
-
-    config.AddJsonFile("appsettings.json", true, reloadOnChange)
-        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, reloadOnChange)
-        .AddJsonFile("appsettings.Active.json", true, reloadOnChange);
-
-    if (env.IsDevelopment() && !string.IsNullOrEmpty(env.ApplicationName))
-    {
-        var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
-
-        config.AddUserSecrets(appAssembly, true);
-    }
-
-    config.AddEnvironmentVariables();
-
-    if (args != null)
-    {
-        config.AddCommandLine(args);
-    }
-});
+configuration.AddEnvironmentVariables();
+configuration.AddCommandLine(args);
 
 var authenticationOptions = configuration.GetSection(nameof(AuthenticationOptions)).Get<AuthenticationOptions>();
 builder.Services.AddJwtAuthentication(authenticationOptions).WithUserClaimsProvider<UserClaimsProvider>(UserClaimsProvider.PermissionClaimType);
 builder.Services.AddPersistence(configuration);
 
-builder.Host.ConfigureLogging((hostingContext, logging) =>
+const string LoggingSectionKey = "Logging";
+var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+var logging = builder.Logging;
+
+if (isWindows)
 {
-    var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+    logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
+    logging.AddEventLog();
+}
 
-    // IMPORTANT: This needs to be added *before* configuration is loaded, this lets
-    // the defaults be overridden by the configuration.
-    if (isWindows)
-    {
-        // Default the EventLogLoggerProvider to warning or above
-        logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
-    }
+logging.AddConfiguration(builder.Configuration.GetSection(LoggingSectionKey));
+logging.AddConsole();
+logging.AddDebug();
+logging.AddEventSourceLogger();
 
-    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
-    logging.AddConsole();
-    logging.AddDebug();
-    logging.AddEventSourceLogger();
-
-    if (isWindows)
-    {
-        // Add the EventLogLoggerProvider on windows machines
-        logging.AddEventLog();
-    }
-
-    logging.Configure(options =>
-    {
-        options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId
-                                          | ActivityTrackingOptions.TraceId
-                                          | ActivityTrackingOptions.ParentId;
-    }
-        );
-});
+logging.Configure(options =>
+{
+    options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId
+                                      | ActivityTrackingOptions.TraceId
+                                      | ActivityTrackingOptions.ParentId;
+}
+    );
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(configuration);
