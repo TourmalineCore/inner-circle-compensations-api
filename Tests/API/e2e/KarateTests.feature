@@ -1,4 +1,6 @@
-﻿Feature: Test Flow
+﻿# TODO: the tests were not completed after the transfer, they need to be completed
+
+Feature: Test Flow
 
     Background:
 
