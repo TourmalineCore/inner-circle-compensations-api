@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  db-debug:
+    image: postgres:13
+    restart: always
+    container_name: 'compensations-db-debug'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: Compensations
+    ports:
+      - 11234:5432
+    networks:
+      - compensations-deb
+
+networks:
+  compensations-deb: {}
+  ic-backend-deb:
+    external: true
