@@ -37,9 +37,8 @@ public class CompensationsService
         await _compensationCreationCommand.ExecuteAsync(dto, employee);
     }
 
-    public async Task<AllCompensationsListDto> GetAdminAllAsync(int year, int month, List<Employee> employees)
+    public async Task<AllCompensationsListDto> GetAdminAllAsync(int year, int month, List<Employee> employees, long tenantId)
     {
-        var tenantId = employees[0].TenantId;
         var compensations = await _compensationsQuery.GetCompensationsAsync(year, month, tenantId);
         return new AllCompensationsListDto(compensations, employees);
     }
