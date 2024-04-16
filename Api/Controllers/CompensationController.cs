@@ -48,8 +48,9 @@ public class CompensationController : Controller
     [HttpGet("admin/all")]
     public async Task<AllCompensationsListDto> GetAdminAllAsync([FromQuery] int year, [FromQuery] int month)
     {
-        var employees = await _client.GetEmployeesAsync();
-        return await _compensationsService.GetAdminAllAsync(year, month, employees);
+        var tenantId = User.GetTenantId();
+        var employees = await _client.GetEmployeesAsync(tenantId);
+        return await _compensationsService.GetAdminAllAsync(year, month, employees, tenantId);
     }
 
     [RequiresPermission(UserClaimsProvider.CanManageCompensations)]
