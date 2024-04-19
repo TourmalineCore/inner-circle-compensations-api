@@ -23,20 +23,29 @@ namespace Tests.Application.Queries
             Assert.Empty(await query.GetPersonalCompensationsAsync(100, 500));
         }
 
-        //[Fact]
-        //public async Task ShouldFindProductWithSeveralBarCodes()
-        //{
-        //    var expectedProductId = _trackedProducts[1].Id;
-        //    ;
-        //    var product = await _query.FindAsync(2000000027265, 1);
+        [Fact]
+        public async Task SingleRecordAvailable_ShouldFindItByEmployeeIdAndTenantId()
+        {
+            var dbContextMock = new Mock<CompensationsDbContext>();
 
-        //    Assert.NotNull(product);
-        //    Assert.Equal(expectedProductId, product.Id);
+            dbContextMock
+                .Setup(x => x.Compensations)
+                .ReturnsDbSet(new List<Compensation>
+                {
+                    new Compensation
+                    {
+                        Id = 100500,
+                        EmployeeId = 200,
+                        TenantId = 600
+                    }
+                });
 
-        //    product = await _query.FindAsync(2207280000000, 1);
+            var query = new PersonalCompensationsQuery(dbContextMock.Object);
 
-        //    Assert.NotNull(product);
-        //    Assert.Equal(expectedProductId, product.Id);
-        //}
+            var queryResult = await query.GetPersonalCompensationsAsync(200, 600);
+
+            Assert.Single(queryResult);
+            Assert.Equal(100500, queryResult.Single().Id);
+        }
     }
 }

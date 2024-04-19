@@ -27,6 +27,7 @@ public class CompensationsQuery : ICompensationsQuery
     {
         return await _context
             .Compensations
+            //.Where(x => x.TenantId = 1)
             .Where(x => x.EmployeeId == employeeId)
             .AsNoTracking()
             .ToListAsync();
