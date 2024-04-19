@@ -1,3 +1,4 @@
+using Application.Queries;
 using Core;
 using DataAccess;
 using Moq;

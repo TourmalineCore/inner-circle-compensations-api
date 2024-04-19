@@ -7,11 +7,16 @@ namespace DataAccess;
 //PM> $env:ASPNETCORE_ENVIRONMENT = 'Debug'; Update-Database
 public class CompensationsDbContext : DbContext
 {
-    public DbSet<Compensation> Compensations { get; set; }
+    public virtual DbSet<Compensation> Compensations { get; set; }
 
     public CompensationsDbContext(DbContextOptions<CompensationsDbContext> options) : base(options)
     {
 
+    }
+
+    // for the sake of Moq library for Tests of DbSet
+    public CompensationsDbContext()
+    {
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
