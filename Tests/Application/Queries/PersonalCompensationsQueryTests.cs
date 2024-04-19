@@ -35,6 +35,36 @@ namespace Tests.Application.Queries
             Assert.Equal(100500, queryResult.Single().Id);
         }
 
+        [Fact]
+        public async Task CompensationsWithDifferentTenantsForTheSameEmployee_ShouldFindCompensationsOnlyForTheNeededTenant()
+        {
+            var query = BuildQuery(new List<Compensation> {
+                new Compensation
+                {
+                    Id = 1,
+                    EmployeeId = 777,
+                    TenantId = 12345
+                },
+                new Compensation
+                {
+                    Id = 2,
+                    EmployeeId = 777,
+                    TenantId = 69
+                },
+                new Compensation
+                {
+                    Id = 3,
+                    EmployeeId = 777,
+                    TenantId = 12345
+                },
+            });
+
+            var queryResult = await query.GetPersonalCompensationsAsync(777, 69);
+
+            Assert.Single(queryResult);
+            Assert.Equal(2, queryResult.Single().Id);
+        }
+
         private static PersonalCompensationsQuery BuildQuery(List<Compensation> compensations)
         {
             var dbContextMock = new Mock<CompensationsDbContext>();
