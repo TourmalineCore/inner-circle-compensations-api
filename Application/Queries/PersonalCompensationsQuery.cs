@@ -14,9 +14,9 @@ public class PersonalCompensationsQuery : IPersonalCompensationsQuery
         _context = context;
     }
 
-    public Task<List<Compensation>> GetPersonalCompensationsAsync(long employeeId, long tenantId)
+    public async Task<List<Compensation>> GetPersonalCompensationsAsync(long employeeId, long tenantId)
     {
-        return _context
+        return await _context
             .Compensations
             .AsNoTracking()
             .Where(x => x.TenantId == tenantId)

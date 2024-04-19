@@ -23,16 +23,6 @@ public class CompensationsQuery : ICompensationsQuery
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Compensation>> GetPersonalCompensationsAsync(long employeeId)
-    {
-        return await _context
-            .Compensations
-            //.Where(x => x.TenantId = 1)
-            .Where(x => x.EmployeeId == employeeId)
-            .AsNoTracking()
-            .ToListAsync();
-    }
-
     public async Task<List<Compensation>> GetCompensationsByIdsAsync(long[] ids)
     {
         var compensations = await _context

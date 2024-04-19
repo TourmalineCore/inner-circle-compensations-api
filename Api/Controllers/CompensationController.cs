@@ -33,8 +33,9 @@ public class CompensationController : Controller
     [HttpGet("all")]
     public async Task<PersonalCompensationListDto> GetEmployeeCompensationsAsync()
     {
+        var tenantId = User.GetTenantId();
         var employee = await _client.GetEmployeeAsync(User.GetCorporateEmail());
-        return await _compensationsService.GetEmployeeCompensationsAsync(employee);
+        return await _compensationsService.GetEmployeeCompensationsAsync(employee, tenantId);
     }
 
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
