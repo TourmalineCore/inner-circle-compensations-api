@@ -18,7 +18,7 @@ public class PersonalCompensationsQuery : IPersonalCompensationsQuery
     {
         return await _context
             .Compensations
-            //.Where(x => x.TenantId = 1)
+            .Where(x => x.TenantId == tenantId)
             .Where(x => x.EmployeeId == employeeId)
             .AsNoTracking()
             .ToListAsync();
