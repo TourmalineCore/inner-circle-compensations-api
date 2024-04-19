@@ -12,13 +12,7 @@ namespace Tests.Application.Queries
         [Fact]
         public async Task UnknownEmployeeIdAndTenantId_ShouldFindNoData()
         {
-            var dbContextMock = new Mock<CompensationsDbContext>();
-
-            dbContextMock
-                .Setup(x => x.Compensations)
-                .ReturnsDbSet(new List<Compensation>());
-
-            var query = new PersonalCompensationsQuery(dbContextMock.Object);
+            var query = BuildQuery(new List<Compensation>());
 
             Assert.Empty(await query.GetPersonalCompensationsAsync(100, 500));
         }
@@ -26,26 +20,30 @@ namespace Tests.Application.Queries
         [Fact]
         public async Task SingleRecordAvailable_ShouldFindItByEmployeeIdAndTenantId()
         {
-            var dbContextMock = new Mock<CompensationsDbContext>();
-
-            dbContextMock
-                .Setup(x => x.Compensations)
-                .ReturnsDbSet(new List<Compensation>
+            var query = BuildQuery(new List<Compensation> {
+                new Compensation
                 {
-                    new Compensation
-                    {
-                        Id = 100500,
-                        EmployeeId = 200,
-                        TenantId = 600
-                    }
-                });
-
-            var query = new PersonalCompensationsQuery(dbContextMock.Object);
+                    Id = 100500,
+                    EmployeeId = 200,
+                    TenantId = 600
+                }
+            });
 
             var queryResult = await query.GetPersonalCompensationsAsync(200, 600);
 
             Assert.Single(queryResult);
             Assert.Equal(100500, queryResult.Single().Id);
+        }
+
+        private static PersonalCompensationsQuery BuildQuery(List<Compensation> compensations)
+        {
+            var dbContextMock = new Mock<CompensationsDbContext>();
+
+            dbContextMock
+                .Setup(x => x.Compensations)
+                .ReturnsDbSet(compensations);
+
+            return new PersonalCompensationsQuery(dbContextMock.Object);
         }
     }
 }
