@@ -13,11 +13,14 @@ public class CompensationsService
 
     private readonly ICompensationsQuery _compensationsQuery;
 
-    public CompensationsService(CompensationCreationCommand createCompensationCommandHandler, ICompensationsQuery compensationsQuery, CompensationStatusUpdateCommand compensationStatusUpdateCommand)
+    private readonly IPersonalCompensationsQuery _personalcompensationsQuery;
+
+    public CompensationsService(CompensationCreationCommand createCompensationCommandHandler, ICompensationsQuery compensationsQuery, IPersonalCompensationsQuery personalcompensationsQuery, CompensationStatusUpdateCommand compensationStatusUpdateCommand)
     {
         _compensationCreationCommand = createCompensationCommandHandler;
         _compensationsQuery = compensationsQuery;
         _compensationStatusUpdateCommand = compensationStatusUpdateCommand;
+        _personalcompensationsQuery = personalcompensationsQuery;
     }
 
     public static List<CompensationType> GetTypes()
@@ -25,9 +28,9 @@ public class CompensationsService
         return CompensationTypes.GetTypeList();
     }
 
-    public async Task<PersonalCompensationListDto> GetEmployeeCompensationsAsync(Employee employee)
+    public async Task<PersonalCompensationListDto> GetEmployeeCompensationsAsync(Employee employee, long tenantId)
     {
-        var compensations = await _compensationsQuery.GetPersonalCompensationsAsync(employee.Id);
+        var compensations = await _personalcompensationsQuery.GetPersonalCompensationsAsync(employee.Id, tenantId);
 
         return new PersonalCompensationListDto(compensations);
     }
