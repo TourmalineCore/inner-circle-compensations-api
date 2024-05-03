@@ -1,0 +1,13 @@
+version: "3.8"
+
+# https://speedscale.com/blog/mockserver-https-apis/
+services:
+  mockServer:
+    image: mockserver/mockserver:5.15.0
+    command: -logLevel INFO
+    ports:
+      - 1080:1080
+    volumes:
+      - ./initializer.json:/config/initializer.json
+    environment:
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/initializer.json
