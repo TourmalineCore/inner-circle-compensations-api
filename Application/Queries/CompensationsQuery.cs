@@ -9,17 +9,18 @@ public class CompensationsQuery : ICompensationsQuery
 {
     private readonly CompensationsDbContext _context;
 
-    private readonly ITenantCompensationsQuery _tenantCompensationsQuery;
-
-    public CompensationsQuery(CompensationsDbContext context, ITenantCompensationsQuery tenantCompensationsQuery)
+    public CompensationsQuery(CompensationsDbContext context)
     {
         _context = context;
-        _tenantCompensationsQuery = tenantCompensationsQuery;
     }
 
     public async Task<List<Compensation>> GetCompensationsAsync(int year, int month, long tenantId)
     {
-        var compensations = await _tenantCompensationsQuery.GetCompensationsByTenantIdAsync(tenantId);
+        var compensations = await _context
+            .Compensations
+            .AsNoTracking()
+            .Where(x => x.TenantId == tenantId)
+            .ToListAsync();
 
         return compensations
             .Where(x => x.DateCompensation.InUtc().Month == month && x.DateCompensation.InUtc().Year == year)

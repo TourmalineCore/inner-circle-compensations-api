@@ -9,17 +9,18 @@ public class PersonalCompensationsQuery : IPersonalCompensationsQuery
 {
     private readonly CompensationsDbContext _context;
 
-    private readonly ITenantCompensationsQuery _tenantCompensationsQuery;
-
-    public PersonalCompensationsQuery(CompensationsDbContext context, ITenantCompensationsQuery tenantCompensationsQuery)
+    public PersonalCompensationsQuery(CompensationsDbContext context)
     {
         _context = context;
-        _tenantCompensationsQuery = tenantCompensationsQuery;
     }
 
     public async Task<List<Compensation>> GetPersonalCompensationsAsync(long employeeId, long tenantId)
     {
-        var compensations = await _tenantCompensationsQuery.GetCompensationsByTenantIdAsync(tenantId);
+        var compensations = await _context
+            .Compensations
+            .AsNoTracking()
+            .Where(x => x.TenantId == tenantId)
+            .ToListAsync();
 
         return compensations
             .Where(x => x.EmployeeId == employeeId)
