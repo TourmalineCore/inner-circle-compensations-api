@@ -14,16 +14,13 @@ public class PersonalCompensationsQuery : IPersonalCompensationsQuery
         _context = context;
     }
 
-    public async Task<List<Compensation>> GetPersonalCompensationsAsync(long employeeId, long tenantId)
+    public Task<List<Compensation>> GetPersonalCompensationsAsync(long employeeId, long tenantId)
     {
-        var compensations = await _context
+        return _context
             .Compensations
             .AsNoTracking()
             .Where(x => x.TenantId == tenantId)
-            .ToListAsync();
-
-        return compensations
             .Where(x => x.EmployeeId == employeeId)
-            .ToList();
+            .ToListAsync();
     }
 }

@@ -14,17 +14,14 @@ public class CompensationsQuery : ICompensationsQuery
         _context = context;
     }
 
-    public async Task<List<Compensation>> GetCompensationsAsync(int year, int month, long tenantId)
+    public Task<List<Compensation>> GetCompensationsAsync(int year, int month, long tenantId)
     {
-        var compensations = await _context
+        return _context
             .Compensations
             .AsNoTracking()
             .Where(x => x.TenantId == tenantId)
-            .ToListAsync();
-
-        return compensations
             .Where(x => x.DateCompensation.InUtc().Month == month && x.DateCompensation.InUtc().Year == year)
-            .ToList();
+            .ToListAsync();
     }
 
     public async Task<List<Compensation>> GetCompensationsByIdsAsync(long[] ids)
