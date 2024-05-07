@@ -3,6 +3,7 @@ version: "3.8"
 # https://speedscale.com/blog/mockserver-https-apis/
 services:
   mockServer:
+    container_name: 'compensations-karate-mock-server'
     image: mockserver/mockserver:5.15.0
     command: -logLevel INFO
     ports:
@@ -11,3 +12,39 @@ services:
       - ./initializer.json:/config/initializer.json
     environment:
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/initializer.json
+    networks:
+      - network-deb
+    
+  db:
+    image: postgres:13
+    restart: always
+    container_name: 'db'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: Compensations
+    ports:
+      - 11237:5432
+    networks:
+      - network-deb
+
+  api:
+    container_name: 'api'
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    ports:
+      - "5283:80"
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Debug"
+      AuthenticationOptions__PublicSigningKey: "MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAz+luHwhsNo4aQxYNCkaxcqL/HUcqWG1zz3pCpbyW5nbgxoo+Xw0jwAqVeRlrWHZf0WszbPObyCpmGVifyj6n0PSp5Np7431zjUhRUkxwyNSyVE5BWw5aJLyLB5EF9HH39CqtxdtWmYuLzhBS5fZT4tyR4xlQffNTxylg7xZgLfunUDRuLxdqR0JO3sjebgogrDVvHj3sif46uitipeTfUyCtqBG/JngPkMbDMNRkTH6QXnXfLgpX5Lr21O4PZPIBwCXzPCTCDMgbXHLvAzdlqgVYJcLf9xXPtVkPGOv8y+hbSTAyCNLViOLKKm2a2W4bPiElDIDwbtbHesj8zHPlpP5Q7QMtT168UxetgUeKsr5kfpxtLpE/QO4GkkqTA6rV7PQKrCTY0B5V8ZD8Ir/hlOKk8jxGe9NLui+8rLnnwJUZErT7Swp9yQL1eed2YtdrcR3q5eOE8+2pkzwjbEoFuIQidDKOghrZOwf6j217fme/xE+aEP0OPv5z07kJr2torh7tUefrVerT4Krj5LVl4DgdlkHAuILWOaYdSoLnRrsrfFa9Y1alM2D/juH9+YtaR/YjNWOhdZNMNyoDT08SbgE81ZbKmVgLGaWFLcMn/LBD6DBeRb5dRx12QZnv0jGJLVVgjTe9EqrjVF92ahGRljDIGjNzEI2f2syc0/qKS4sCAwEAAQ=="
+      AuthenticationOptions__IsDebugTokenEnabled: "true"
+      # InnerCircleServiceUrls__SalaryServiceUrl: "http://compensations-karate-mock-server:1080"
+      ConnectionStrings__DefaultConnection: "Host=db;port=5432;Database=Compensations;Username=postgres;Password=postgres"
+    networks:
+      - network-deb
+
+networks:
+  network-deb: {}

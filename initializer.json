@@ -5,11 +5,11 @@
       "path": "/auth/login"
     },
     "httpResponse": {
-      "statusCode": 200,
-      "body": "{\"accessToken\": { \"value\": \"123\", \"expiresInUtc\": \"#string\" }, \"refreshToken\": { \"value\": \"#string\", \"expiresInUtc\": \"#string\" }}",
-      "headers": {
-        "Content-Type": ["application/json"]
-      }
+        "statusCode": 200,
+        "body": "{\"accessToken\": { \"value\": \"eyJuYW1lSWRlbnRpZmllciI6ImlubmVyLWNpcmNsZS1hZG1pbkB0b3VybWFsaW5lY29yZS5jb20iLCJjb3Jwb3JhdGVFbWFpbCI6ImlubmVyLWNpcmNsZS1hZG1pbkB0b3VybWFsaW5lY29yZS5jb20iLCJ0ZW5hbnRJZCI6IjEiLCJwZXJtaXNzaW9ucyI6WyJWaWV3UGVyc29uYWxQcm9maWxlIiwiVmlld0NvbnRhY3RzIiwiVmlld1NhbGFyeUFuZERvY3VtZW50c0RhdGEiLCJFZGl0RnVsbEVtcGxveWVlc0RhdGEiLCJBY2Nlc3NBbmFseXRpY2FsRm9yZWNhc3RzUGFnZSIsIlZpZXdBY2NvdW50cyIsIk1hbmFnZUFjY291bnRzIiwiVmlld1JvbGVzIiwiTWFuYWdlUm9sZXMiLCJDYW5SZXF1ZXN0Q29tcGVuc2F0aW9ucyIsIkNhbk1hbmFnZUNvbXBlbnNhdGlvbnMiLCJDYW5NYW5hZ2VEb2N1bWVudHMiLCJDYW5NYW5hZ2VUZW5hbnRzIiwiSXNUZW5hbnRzSGFyZERlbGV0ZUFsbG93ZWQiXX0=\" }}",
+        "headers": {
+            "Content-Type": [ "application/json" ]
+        }
     }
   },
   {
