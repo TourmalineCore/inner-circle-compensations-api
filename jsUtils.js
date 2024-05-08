@@ -1,5 +1,11 @@
 function fn() {
     return {
+        getEnvVariable: function (variable) {
+            var System = Java.type('java.lang.System');
+
+            return System.getenv(variable);
+        },
+
         getAuthHeaders: function (tokenValue) {
             return {
                 [this.getAuthHeaderKey()]: this.getAuthHeaderValue(tokenValue)
