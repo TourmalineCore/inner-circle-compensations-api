@@ -29,12 +29,11 @@ Scenario: e2e test flow
     Then status 200
     And match response == []
 
-    # # Get types
-    # Given url apiRootUrl
-    # And path '/api/compensations/types'
-    # When method GET
-    # Then status 200
-    # And match response contains [{"typeId":1,"label":"English"},{"typeId":2,"label":"German"},{"typeId":3,"label":"Swimming"},{"typeId":4,"label":"Water"},{"typeId":5,"label":"Coworking"},{"typeId":6,"label":"Massage"},{"typeId":7,"label":"Products"},{"typeId":8,"label":"Consumables"},{"typeId":9,"label":"Periphery"},{"typeId":10,"label":"Business trip"},{"typeId":11,"label":"Psychotherapy"},{"typeId":12,"label":"Other"}]
+    # Get types
+    Given url apiRootUrl
+    And path '/api/compensations/types'
+    When method GET
+    Then status 200
 
     # # Create compensation
     # # And request {"httpRequest":{"method":"POST","path":"salary/compensations/create","body":{"compensations":[{"typeId":1,"comment":"string","amount":700,"isPaid":false}],"dateCompensation":"2023-12-01T00:00:00Z"}}}

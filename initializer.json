@@ -15,7 +15,7 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/salary/compensations/types"
+      "path": "/api/compensations/types"
     },
     "httpResponse": {
       "statusCode": 200,
@@ -28,7 +28,7 @@
   {
     "httpRequest": {
       "method": "POST",
-      "path": "/salary/compensations/create",
+      "path": "/api/compensations/create",
       "body": {
         "compensations": [
           {
@@ -51,7 +51,7 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/salary/compensations/all"
+      "path": "/api/compensations/all"
     },
     "httpResponse": {
       "statusCode": 200,
@@ -64,7 +64,7 @@
   {
     "httpRequest": {
       "method": "GET",
-      "path": "/salary/compensations/admin/all",
+      "path": "/api/compensations/admin/all",
       "queryStringParameters": {
         "year": ["2023"],
         "month": ["12"]
@@ -81,7 +81,7 @@
   {
     "httpRequest": {
       "method": "PUT",
-      "path": "/salary/compensations/admin/update",
+      "path": "/api/compensations/admin/update",
       "body": [
         11
       ]
