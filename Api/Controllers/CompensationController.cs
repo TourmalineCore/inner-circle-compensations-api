@@ -23,10 +23,10 @@ public class CompensationController : Controller
 
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
     [HttpPost("create")]
-    public async Task CreateAsync([FromBody] CompensationCreateDto dto)
+    public async Task<List<long>> CreateAsync([FromBody] CompensationCreateDto dto)
     {
         var employee = await _client.GetEmployeeAsync(User.GetCorporateEmail());
-        await _compensationsService.CreateAsync(dto, employee);
+        return await _compensationsService.CreateAsync(dto, employee);
     }
 
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
