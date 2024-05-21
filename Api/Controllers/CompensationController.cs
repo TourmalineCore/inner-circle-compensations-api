@@ -55,7 +55,7 @@ public class CompensationController : Controller
     }
 
     [RequiresPermission(UserClaimsProvider.CanManageCompensations)]
-    [HttpPut("admin/update")]
+    [HttpPut("mark-as-paid")]
     public async Task UpdateStatusAsync([FromBody] long[] compensationsIds)
     {
         await _compensationsService.UpdateStatusAsync(compensationsIds);
