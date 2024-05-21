@@ -40,15 +40,7 @@ Go to VS Code
 1. Install the extension "Dev Containers" (extension id: ms-vscode-remote.remote-containers)
 2. Click on the blue button in the lower left corner of your screen
 3. Click "Rebuild Container" or something like this - the project will start in dev container
-4. Enter these commands to set your environment variables
-```
-// export API_ROOT_URL="http://host.docker.internal:5283"
-
-export AUTH_API_ROOT_URL="http://localhost:1080"
-export API_ROOT_URL="http://localhost:5283"
-export SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES="true"
-```
-5. Enter this command to run the tests
+4. Enter this command to run the tests
 ```
 java -jar /karate.jar .
 ```
