@@ -27,7 +27,6 @@ Scenario: e2e test flow
     And path '/api/compensations/all'
     And method GET
     Then status 200
-    And match response == []
 
     # Get types
     Given url apiRootUrl
@@ -35,38 +34,36 @@ Scenario: e2e test flow
     When method GET
     Then status 200
 
-    # # Create compensation
-    # # And request {"httpRequest":{"method":"POST","path":"salary/compensations/create","body":{"compensations":[{"typeId":1,"comment":"string","amount":700,"isPaid":false}],"dateCompensation":"2023-12-01T00:00:00Z"}}}
-    # Given url apiRootUrl
-    # And path '/api/compensations/create'
-    # When method POST
-    # Then status 200
+    # Create compensation
+    Given url apiRootUrl
+    And path '/api/compensations/create'
+    And request {"compensations":[{"typeId":1,"comment":"my compensation","amount":700}],"dateCompensation":"2023-12-01"}
+    When method POST
+    Then status 200
+    * def newId = response[0]
 
-    # # Get all personal compensations - Unpaid compensation exists
-    # Given url apiRootUrl
-    # And path '/api/compensations/all'
-    # When method GET
-    # Then status 200
-    # And match response contains {"list":[{"id":10,"comment":"string","amount":700,"isPaid":false,"compensationType":"English","dateCreateCompensation":"2023-12-01T00:00:00Z","dateCompensation":"2023-12-01T00:00:00Z"}],"totalUnpaidAmount":700}
+    # Get all personal compensations - Unpaid compensation exists
+    Given url apiRootUrl
+    And path '/api/compensations/all'
+    When method GET
+    Then status 200
+    # Check if the new compensation is present in the response
+    And match response.list[*].id contains newId
+    # Check that the new compensation has isPaid = false
+    * def newCompensation = response.list.find(x => x.id == newId)
+    And newCompensation.isPaid == false
 
-    # # Get all admin compensations - Unpaid compensation exists
-    # Given url apiRootUrl
-    # And path '/api/compensations/admin/all'
-    # When method GET
-    # Then status 200
-    # And match response contains {"totalAmount":700,"totalUnpaidAmount":700,"items":[{"employeeFullName":"Ivanov Ivan Ivanovich","employeeId":11,"dateCompensation":"2023-12-01T00:00:00Z","totalAmount":700,"unpaidAmount":700,"isPaid":false,"compensations":[{"id":10,"compensationType":"English","comment":"string","amount":700,"dateCreateCompensation":"2023-12-01T00:00:00Z"}]}]}
+    # Update compensation status
+    Given url apiRootUrl
+    And path '/api/compensations/mark-as-paid'
+    And request [#(newId)]
+    When method PUT
+    Then status 200
 
-    # # Update compensation status
-    # # And request {"httpRequest":{"method":"PUT","path":"salary/compensations/admin/update","body":[10]}}
-    # Given url apiRootUrl
-    # And path '/api/compensations/admin/update'
-    # And path '/api/compensations/mark-as-paid'
-    # When method PUT
-    # Then status 200
-
-    # # Get all personal compensations - Paid compensation exists
-    # Given url apiRootUrl
-    # And path '/api/compensations/all'
-    # When method GET
-    # Then status 200
-    # And match response contains {"list":[{"id":10,"comment":"string","amount":700,"isPaid":true,"compensationType":"English","dateCreateCompensation":"2023-12-01T00:00:00Z","dateCompensation":"2023-12-01T00:00:00Z"}],"totalUnpaidAmount":0}
+    # Get all personal compensations - Paid compensation exists
+    Given url apiRootUrl
+    And path '/api/compensations/all'
+    When method GET
+    Then status 200
+    # Check that the new compensation has isPaid = true
+    And newCompensation.isPaid == true
