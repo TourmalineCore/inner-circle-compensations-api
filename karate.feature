@@ -33,6 +33,8 @@ Scenario: e2e test flow
     And path '/api/compensations/types'
     When method GET
     Then status 200
+    And match response contains {"typeId":6,"label":"Massage"}
+    # And match response[0].typeId == 1
 
     # Create compensation
     Given url apiRootUrl
