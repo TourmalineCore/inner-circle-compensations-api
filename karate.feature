@@ -33,13 +33,13 @@ Scenario: e2e test flow
     And path '/api/compensations/types'
     When method GET
     Then status 200
+    # Check if there is at least one compensation type, massage is chosen as an example
     And match response contains {"typeId":6,"label":"Massage"}
-    # And match response[0].typeId == 1
 
     # Create compensation
     Given url apiRootUrl
     And path '/api/compensations/create'
-    And request {"compensations":[{"typeId":1,"comment":"my compensation","amount":700}],"dateCompensation":"2023-12-01"}
+    And request {"compensations":[{"typeId":6,"comment":"my compensation","amount":700}],"dateCompensation":"2023-12"}
     When method POST
     Then status 200
     * def newId = response[0]
