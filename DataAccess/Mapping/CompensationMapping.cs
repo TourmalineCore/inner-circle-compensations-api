@@ -15,9 +15,9 @@ public class CompensationMapping : IEntityTypeConfiguration<Compensation>
          v.ToDateTimeUtc(),
          v => Instant.FromDateTimeUtc(v));
 
-        builder.Property(e => e.DateCreateCompensation)
+        builder.Property(e => e.CompensationRequestedAtUtc)
             .HasConversion(instantConverter);
-        builder.Property(e => e.DateCompensation)
+        builder.Property(e => e.CompensationRequestedForYearAndMonth)
             .HasConversion(instantConverter);
     }
 }

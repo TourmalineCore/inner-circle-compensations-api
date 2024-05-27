@@ -25,7 +25,7 @@ public class ItemDto
 
     public long EmployeeId { get; }
 
-    public string DateCompensation { get; }
+    public string CompensationRequestedForYearAndMonth { get; }
 
     public double TotalAmount { get; }
 
@@ -38,7 +38,7 @@ public class ItemDto
     public ItemDto(List<Compensation> employeeCompensations, Employee employee)
     {
         EmployeeFullName = employee.FullName;
-        DateCompensation = employeeCompensations[0].DateCompensation.ToString();
+        CompensationRequestedForYearAndMonth = employeeCompensations[0].CompensationRequestedForYearAndMonth.ToString();
         TotalAmount = Math.Round(employeeCompensations.Sum(x => x.Amount), 2);
         UnpaidAmount = Math.Round(employeeCompensations.Where(x => !x.IsPaid).Sum(x => x.Amount), 2);
         Compensations = employeeCompensations.Select(x => new EmployeeCompensationDto(x));
@@ -57,7 +57,7 @@ public class EmployeeCompensationDto
 
     public double Amount { get; }
 
-    public string DateCreateCompensation { get; }
+    public string CompensationRequestedAtUtc { get; }
 
     public EmployeeCompensationDto(Compensation compensation)
     {
@@ -65,6 +65,6 @@ public class EmployeeCompensationDto
         CompensationType = CompensationTypes.GetTypeNameByTypeId(compensation.TypeId);
         Comment = compensation.Comment;
         Amount = compensation.Amount;
-        DateCreateCompensation = compensation.DateCreateCompensation.ToString();
+        CompensationRequestedAtUtc = compensation.CompensationRequestedAtUtc.ToString();
     }
 }
