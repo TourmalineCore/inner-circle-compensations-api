@@ -36,10 +36,10 @@ namespace DataAccess.Migrations
                     b.Property<string>("Comment")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CompensationRequestedAtUtc")
+                    b.Property<DateTime>("DateCompensation")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("CompensationRequestedForYearAndMonth")
+                    b.Property<DateTime>("DateCreateCompensation")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<long>("EmployeeId")

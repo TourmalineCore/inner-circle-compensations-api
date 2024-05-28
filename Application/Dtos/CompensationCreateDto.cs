@@ -4,7 +4,7 @@ public readonly struct CompensationCreateDto
 {
     public List<CompensationDto> Compensations { get; init; }
 
-    public string CompensationRequestedForYearAndMonth { get; init; }
+    public string DateCompensation { get; init; }
 }
 
 public readonly struct CompensationDto

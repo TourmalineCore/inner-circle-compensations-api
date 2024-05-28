@@ -18,14 +18,14 @@ public class Compensation
 
     public long TenantId { get; set; }
 
-    public Instant CompensationRequestedAtUtc { get; set; }
+    public Instant DateCreateCompensation { get; set; }
 
-    public Instant CompensationRequestedForYearAndMonth { get; set; }
+    public Instant DateCompensation { get; set; }
 
     public Compensation() {
     }
 
-    public Compensation(long typeId, string? comment, double amount, Employee employee, string compensationRequestedForYearAndMonth, bool isPaid = false)
+    public Compensation(long typeId, string? comment, double amount, Employee employee, string dateCompensation, bool isPaid = false)
     {
         if (!CompensationTypes.IsTypeExist(typeId))
         {
@@ -43,8 +43,8 @@ public class Compensation
         IsPaid = isPaid;
         EmployeeId = employee.Id;
         TenantId = employee.TenantId;
-        CompensationRequestedAtUtc = SystemClock.Instance.GetCurrentInstant();
-        CompensationRequestedForYearAndMonth = Instant.FromDateTimeUtc(DateTime.SpecifyKind(DateTime.Parse(compensationRequestedForYearAndMonth), DateTimeKind.Utc));
+        DateCreateCompensation = SystemClock.Instance.GetCurrentInstant();
+        DateCompensation = Instant.FromDateTimeUtc(DateTime.SpecifyKind(DateTime.Parse(dateCompensation), DateTimeKind.Utc));
     }
 
 }
