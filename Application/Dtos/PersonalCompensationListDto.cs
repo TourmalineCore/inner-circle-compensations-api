@@ -31,14 +31,14 @@ public class PersonalCompensationItemDto
 
     public string CompensationRequestedForYearAndMonth { get; }
 
-    public PersonalCompensationItemDto(long id, string? comment, double amount, bool isPaid, long typeId, string CompensationRequestedAtUtc, string CompensationRequestedForYearAndMonth)
+    public PersonalCompensationItemDto(long id, string? comment, double amount, bool isPaid, long typeId, string compensationRequestedAtUtc, string compensationRequestedForYearAndMonth)
     {
         Id = id;
         Comment = comment;
         Amount = amount;
         IsPaid = isPaid;
         CompensationType = CompensationTypes.GetTypeNameByTypeId(typeId);
-        CompensationRequestedAtUtc = CompensationRequestedAtUtc;
-        CompensationRequestedForYearAndMonth = CompensationRequestedForYearAndMonth;
+        CompensationRequestedAtUtc = compensationRequestedAtUtc;
+        CompensationRequestedForYearAndMonth = compensationRequestedForYearAndMonth;
     }
 }
