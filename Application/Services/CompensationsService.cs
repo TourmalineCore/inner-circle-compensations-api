@@ -35,9 +35,9 @@ public class CompensationsService
         return new PersonalCompensationListDto(compensations);
     }
 
-    public async Task<List<long>> CreateAsync(CompensationCreateDto dto, Employee employee)
+    public async Task CreateAsync(CompensationCreateDto dto, Employee employee)
     {
-        return await _compensationCreationCommand.ExecuteAsync(dto, employee);
+        await _compensationCreationCommand.ExecuteAsync(dto, employee);
     }
 
     public async Task<AllCompensationsListDto> GetAdminAllAsync(int year, int month, List<Employee> employees, long tenantId)
