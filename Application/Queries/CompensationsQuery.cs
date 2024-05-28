@@ -20,7 +20,7 @@ public class CompensationsQuery : ICompensationsQuery
             .Compensations
             .AsNoTracking()
             .Where(x => x.TenantId == tenantId)
-            .Where(x => x.DateCompensation.InUtc().Month == month && x.DateCompensation.InUtc().Year == year)
+            .Where(x => x.CompensationRequestedForYearAndMonth.InUtc().Month == month && x.CompensationRequestedForYearAndMonth.InUtc().Year == year)
             .ToListAsync();
     }
 

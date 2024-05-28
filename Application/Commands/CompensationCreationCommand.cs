@@ -15,7 +15,7 @@ public class CompensationCreationCommand
 
     public async Task ExecuteAsync(CompensationCreateDto dto, Employee employee)
     {
-        var compensations = dto.Compensations.Select(x => new Compensation(x.TypeId, x.Comment, x.Amount, employee, dto.DateCompensation, x.IsPaid));
+        var compensations = dto.Compensations.Select(x => new Compensation(x.TypeId, x.Comment, x.Amount, employee, dto.CompensationRequestedForYearAndMonth, x.IsPaid));
 
         await _context.AddRangeAsync(compensations);
         await _context.SaveChangesAsync();
