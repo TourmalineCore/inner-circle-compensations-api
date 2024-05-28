@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(CompensationsDbContext))]
-    [Migration("20240527114733_RenameDateFields")]
-    partial class RenameDateFields
+    [Migration("20240528053615_RenameCompensationDate")]
+    partial class RenameCompensationDate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -1,20 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace DataAccess.Migrations
 {
-    public partial class RenameDateFields : Migration
+    public partial class RenameCreateCompensationDate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
                 name: "DateCreateCompensation",
-                table: "Compensations",
-                newName: "CompensationRequestedForYearAndMonth");
-
-            migrationBuilder.RenameColumn(
-                name: "DateCompensation",
                 table: "Compensations",
                 newName: "CompensationRequestedAtUtc");
         }
@@ -22,14 +17,9 @@ namespace DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "CompensationRequestedForYearAndMonth",
-                table: "Compensations",
-                newName: "DateCreateCompensation");
-
-            migrationBuilder.RenameColumn(
                 name: "CompensationRequestedAtUtc",
                 table: "Compensations",
-                newName: "DateCompensation");
+                newName: "CompensationRequestedAtUtc");
         }
     }
 }
