@@ -19,11 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2.0.0
 
-      - name: Restore dependencies
+      - name: Restore application dependencies
         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release
+      - name: Build application
+        run: dotnet build
 
       - name: Run unit tests
         run: dotnet test
