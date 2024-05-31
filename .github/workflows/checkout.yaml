@@ -12,17 +12,12 @@ env:
 
 jobs:
   unit-tests:
-    name: Run unit tests for ASP.NET application
+    name: Run unit tests
     if: github.event_name == 'push'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '6.0.0'
 
       - name: Restore dependencies
         run: dotnet restore
