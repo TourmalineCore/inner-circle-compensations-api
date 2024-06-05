@@ -11,6 +11,23 @@ env:
   GITHUB_REGISTRY: ghcr.io
 
 jobs:
+  unit-tests:
+    name: Run unit tests
+    if: github.event_name == 'push'
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.0.0
+
+      - name: Restore application dependencies
+        run: dotnet restore
+
+      - name: Build application
+        run: dotnet build
+
+      - name: Run unit tests
+        run: dotnet test
+        
   build-image:
     name: Build and push service image 
     if: github.event_name == 'push'
