@@ -32,6 +32,7 @@ jobs:
     name: Build and push service image 
     if: github.event_name == 'push'
     runs-on: ubuntu-22.04
+    needs: unit-tests
     steps:
       - name: checkout
         uses: actions/checkout@v1
