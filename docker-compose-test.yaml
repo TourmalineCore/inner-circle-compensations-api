@@ -51,6 +51,10 @@ services:
     command: ["karate", "/karate"]
     volumes:
       - .:/karate
+    environment:
+      AUTH_API_ROOT_URL: "http://mockServer:1080"
+      API_ROOT_URL: "http://api"
+      SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
     networks:
       - network-deb
 
