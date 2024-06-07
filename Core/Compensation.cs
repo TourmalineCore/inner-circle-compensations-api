@@ -20,7 +20,7 @@ public class Compensation
 
     public Instant CompensationRequestedAtUtc { get; set; }
 
-    public Instant CompensationRequestedForYearAndMonth { get; set; }
+    public DateOnly CompensationRequestedForYearAndMonth { get; set; }
 
     public Compensation() {
     }
@@ -44,7 +44,10 @@ public class Compensation
         EmployeeId = employee.Id;
         TenantId = employee.TenantId;
         CompensationRequestedAtUtc = SystemClock.Instance.GetCurrentInstant();
-        CompensationRequestedForYearAndMonth = Instant.FromDateTimeUtc(DateTime.SpecifyKind(DateTime.Parse(compensationRequestedForYearAndMonth), DateTimeKind.Utc));
+        //CompensationRequestedAtUtc = Instant.FromDateTimeUtc(DateTime.UtcNow);
+        var result = DateTime.Parse(compensationRequestedForYearAndMonth, null, System.Globalization.DateTimeStyles.RoundtripKind);
+        CompensationRequestedForYearAndMonth = new DateOnly(result.Year, result.Month, 1);
+
     }
 
 }
