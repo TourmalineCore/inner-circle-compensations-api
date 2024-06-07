@@ -25,7 +25,7 @@ jobs:
       # Extract test results from container logs
       # We waiting for `passed: <number of passed tests>` in logs
       run: |
-        FAILED=$(docker-compose logs karate-tests | grep -oP 'failed: *\K\d+')
+        FAILED=$(docker-compose -f docker-compose-test.yaml logs karate-tests | grep -oP 'failed: *\K\d+')
         echo "Failed tests: $FAILED"
         if [ $FAILED -gt 0 ]; then
           echo "Failed tests found! Failing the pipeline..."
