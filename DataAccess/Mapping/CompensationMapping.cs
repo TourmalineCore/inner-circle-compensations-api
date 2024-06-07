@@ -17,7 +17,7 @@ public class CompensationMapping : IEntityTypeConfiguration<Compensation>
 
         builder.Property(e => e.CompensationRequestedAtUtc)
             .HasConversion(instantConverter);
-        builder.Property(e => e.CompensationRequestedForYearAndMonth)
-            .HasConversion(instantConverter);
+        //builder.Property(e => e.CompensationRequestedForYearAndMonth)
+        //    .HasConversion(instantConverter);
     }
 }
