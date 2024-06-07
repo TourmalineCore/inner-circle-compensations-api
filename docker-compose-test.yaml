@@ -42,5 +42,17 @@ services:
     networks:
       - network-deb
 
+  karate-tests:
+    build:
+      dockerfile: KarateDockerfile
+      context: .
+    depends_on:
+      - api
+    command: ["karate", "/karate"]
+    volumes:
+      - .:/karate
+    networks:
+      - network-deb
+
 networks:
   network-deb: {}

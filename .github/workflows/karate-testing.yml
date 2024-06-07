@@ -1,0 +1,31 @@
+name: Karate Local Testing
+
+on:
+  push:
+    branches:
+      - 'feature/*'
+
+env:
+  GITHUB_REGISTRY: ghcr.io
+
+jobs:
+  test:
+    # Image to run project and tests
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Run service via docker-compose
+      # Run project via docker-compose. 
+      # Use --abort-on-container-exit flag to stop all containers when tests were passed or failed to free up resources.
+      run: |
+        docker-compose up --abort-on-container-exit
+    - name: Extract test results from karate container logs
+      # Extract test results from container logs
+      # We waiting for `passed: <number of passed tests>` in logs
+      run: |
+        FAILED=$(docker-compose logs karate-tests | grep -oP 'failed: *\K\d+')
+        echo "Failed tests: $FAILED"
+        if [ $FAILED -gt 0 ]; then
+          echo "Failed tests found! Failing the pipeline..."
+          exit 1
+        fi
