@@ -11,10 +11,13 @@ Scenario: e2e test flow
     * def jsUtils = read('jsUtils.js')
     * def authApiRootUrl = jsUtils().getEnvVariable('AUTH_API_ROOT_URL')
     * def apiRootUrl = jsUtils().getEnvVariable('API_ROOT_URL')
+    * def authLogin = jsUtils().getEnvVariable('AUTH_LOGIN')
+    * def authPassword = jsUtils().getEnvVariable('AUTH_PASSWORD')
 
     # Authentication
     Given url authApiRootUrl
     And path '/auth/login'
+    And request {"login": #(authLogin), "password": #(authPassword)}
     And method POST
     Then status 200
 
