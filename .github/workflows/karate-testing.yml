@@ -24,13 +24,10 @@ jobs:
 
     - name: Extract and filter test results from karate container logs
       run: |
-        # Read logs from file
         LOGS=$(cat docker-compose-logs.txt)
-        # Replace LOGIN and PASSWORD with asterisks to hide sensitive data
-        LOGS=$(echo "$LOGS" | sed 's/LOGIN=[^ ]*/LOGIN=****/g' | sed 's/PASSWORD=[^ ]*/PASSWORD=****/g')
+        LOGS=$(echo "$LOGS" | sed 's/login=[^ ]*/login=****/g' | sed 's/password=[^ ]*/password=****/g')
         echo "$LOGS" > filtered-logs.txt
         cat filtered-logs.txt
-        # Extract failed and passed tests counts
         FAILED=$(echo "$LOGS" | grep -oP 'failed: *\K\d+')
         PASSED=$(echo "$LOGS" | grep -oP 'passed: *\K\d+')
         echo "Failed tests: $FAILED"
