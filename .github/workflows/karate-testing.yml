@@ -1,9 +1,13 @@
 name: Karate Local Testing
 
 on:
+  push:
+    branches:
+      - 'feature/*' 
+      
   pull_request:
     branches:
-      - 'feature/*'
+      - 'master'
 
 env:
   GITHUB_REGISTRY: ghcr.io
