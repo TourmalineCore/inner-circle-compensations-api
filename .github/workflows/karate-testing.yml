@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+    - name: Install jq
+      run: sudo apt-get install -y jq
     - name: Run service via docker-compose
       # Run project via docker-compose. 
       # Use --abort-on-container-exit flag to stop all containers when tests were passed or failed to free up resources.
