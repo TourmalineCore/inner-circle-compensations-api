@@ -14,20 +14,26 @@ env:
 
 jobs:
   test:
+    # Image to run project and tests
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-
     - name: Run service via docker-compose
+      # Run project via docker-compose. 
+      # Use --abort-on-container-exit flag to stop all containers when tests were passed or failed to free up resources.
       run: |
         docker-compose -f docker-compose-test.yaml up --abort-on-container-exit > docker-compose-logs.txt
-
-    - name: Extract and filter test results from karate container logs
+    - name: Extract test results from karate container logs
+      # Extract test results from container logs
+      # We waiting for `passed: <number of passed tests>` in logs
       run: |
+        # Read logs from file
         LOGS=$(cat docker-compose-logs.txt)
-        LOGS=$(echo "$LOGS" | sed 's/login=[^ ]*/login=****/g' | sed 's/password=[^ ]*/password=****/g')
+        # Replace values of "login" and "password" in JSON with asterisks
+        LOGS=$(echo "$LOGS" | sed -E 's/"login":"[^"]*"/"login":"****"/g' | sed -E 's/"password":"[^"]*"/"password":"****"/g')
         echo "$LOGS" > filtered-logs.txt
         cat filtered-logs.txt
+        # Extract failed and passed tests counts
         FAILED=$(echo "$LOGS" | grep -oP 'failed: *\K\d+')
         PASSED=$(echo "$LOGS" | grep -oP 'passed: *\K\d+')
         echo "Failed tests: $FAILED"
