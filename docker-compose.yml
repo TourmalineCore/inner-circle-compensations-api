@@ -58,8 +58,6 @@ services:
       AUTH_API_ROOT_URL: "http://mockServer:1080"
       API_ROOT_URL: "http://api"
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
-      AUTH_LOGIN: ${AUTH_LOGIN}
-      AUTH_PASSWORD: ${AUTH_PASSWORD}
     networks:
       - compensations-deb
 
