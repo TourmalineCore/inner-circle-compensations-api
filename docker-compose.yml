@@ -1,17 +1,16 @@
 version: "3.8"
 
 services:
-  db-debug:
+  db:
     image: postgres:13
-    container_name: 'compensations-db-debug'
-    profiles: ["local-run", "ide-run"]
     restart: always
+    container_name: 'db'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: Compensations
     ports:
-      - 11234:5432
+      - 11237:5432
     networks:
       - compensations-deb
 
@@ -38,7 +37,7 @@ services:
     ports:
       - "5283:80"
     depends_on:
-      - db-debug
+      - db
     environment:
       ASPNETCORE_ENVIRONMENT: "MockForPullRequest"
     networks:
