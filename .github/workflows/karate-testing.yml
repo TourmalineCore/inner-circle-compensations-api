@@ -20,6 +20,7 @@ jobs:
     - uses: actions/checkout@v4
     - name: Set up Docker Compose environment variables
       run: |
+        echo AUTH_LOGIN=${{ secrets.AUTH_LOGIN }}
         echo AUTH_LOGIN=${{ secrets.AUTH_LOGIN }} >> .env
         echo AUTH_PASSWORD=${{ secrets.AUTH_PASSWORD }} >> .env
     - name: Run service via docker-compose and run Karate-tests
