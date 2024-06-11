@@ -24,7 +24,7 @@ jobs:
         echo AUTH_PASSWORD=${{ secrets.AUTH_PASSWORD }} >> .env
     - name: Run service via docker-compose and run Karate-tests
       run: |
-        LOGS=$(docker-compose -f docker-compose-test.yaml up --abort-on-container-exit)
+        LOGS=$(docker-compose --profile local-run -f docker-compose-test.yaml up --abort-on-container-exit)
         FILTERED_LOGS=$(echo "$LOGS" | sed -E 's/"login":"[^"]*"/"login":"****"/g' | sed -E 's/"password":"[^"]*"/"password":"****"/g')
         echo "$FILTERED_LOGS"
         FAILED=$(echo "$FILTERED_LOGS" | grep -oP 'failed: *\K\d+')
@@ -39,30 +39,3 @@ jobs:
           echo "No tests passed! Failing the pipeline..."
           exit 1
         fi
-# jobs:
-#   test:
-#     # Image to run project and tests
-#     runs-on: ubuntu-latest
-#     steps:
-#     - uses: actions/checkout@v4
-#     - name: Run service via docker-compose
-#       # Run project via docker-compose. 
-#       # Use --abort-on-container-exit flag to stop all containers when tests were passed or failed to free up resources.
-#       run: |
-#         docker-compose -f docker-compose-test.yaml up --abort-on-container-exit
-#     - name: Extract test results from karate container logs
-#       # Extract test results from container logs
-#       # We waiting for `passed: <number of passed tests>` in logs
-#       run: |
-#         FAILED=$(docker-compose -f docker-compose-test.yaml logs karate-tests | grep -oP 'failed: *\K\d+')
-#         PASSED=$(docker-compose -f docker-compose-test.yaml logs karate-tests | grep -oP 'passed: *\K\d+')
-#         echo "Failed tests: $FAILED"
-#         echo "Passed tests: $PASSED"
-#         if [ $FAILED -gt 0 ]; then
-#           echo "Failed tests found! Failing the pipeline..."
-#           exit 1
-#         fi
-#         if [ $PASSED -eq 0 ]; then
-#           echo "No tests passed! Failing the pipeline..."
-#           exit 1
-#         fi
