@@ -16,6 +16,9 @@ jobs:
   test:
     # Image to run project and tests
     runs-on: ubuntu-latest
+    env:
+      AUTH_LOGIN: ${{ secrets.AUTH_LOGIN }}
+      AUTH_PASSWORD: ${{ secrets.AUTH_PASSWORD }}
     steps:
     - uses: actions/checkout@v4
     - name: Run service via docker-compose and run Karate-tests
