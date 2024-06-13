@@ -19,7 +19,7 @@ Note: If you already has this network, skip this step
 
 To start the service, you should go to the solution folder and enter this command in the terminal. This command starts the service in Docker and raises the database.
 ```
-docker-compose up -d
+docker-compose --profile ide-run up -d
 ```
 To run the project use the keyboard shortcut `Ctrl+F5` (or `Cmd+F5` for Mac)
 
@@ -33,7 +33,7 @@ http://localhost:5273/index.html
 To run tests, you need to open the project in VS Code and Visual Studio.
 Enter this command in Visual Studio
 ```
-docker-compose -f docker-compose-test.yaml up -d
+docker-compose --profile local-run up -d
 ```
 
 Go to VS Code
