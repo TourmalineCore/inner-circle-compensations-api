@@ -19,7 +19,7 @@ Scenario: e2e test flow
     And path '/auth/login'
     And request {"login": #(authLogin), "password": #(authPassword)}
     And method POST
-    Then status 403
+    Then status 401
 
     # * def accessToken = karate.toMap(response.accessToken.value)
 
