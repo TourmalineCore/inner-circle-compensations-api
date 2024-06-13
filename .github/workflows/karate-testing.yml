@@ -21,7 +21,7 @@ jobs:
     - name: Run service via docker-compose and run Karate-tests
       run: |
         LOGS=$(docker-compose --profile local-run up --abort-on-container-exit)
-        FILTERED_LOGS=$(echo "$LOGS" | sed -E 's/"login":"[^"]*"/"login":"****"/g' | sed -E 's/"password":"[^"]*"/"password":"****"/g' | sed -E 's/"accessToken":"[^"]*"/"accessToken":"****"/g' | sed -E 's/"Authorization":"[^"]*"/"Authorization":"****"/g')
+        FILTERED_LOGS=$(echo "$LOGS" | sed -E 's/"login":"[^"]*"/"login":"****"/g' | sed -E 's/"password":"[^"]*"/"password":"****"/g' | sed -E 's/"accessToken":"[^"]*"/"accessToken":"****"/g' | sed -E 's/"Authorization":"[^"]*"/"Authorization":"****"/g' | sed -E 's/"X-DEBUG-TOKEN":"[^"]*"/"X-DEBUG-TOKEN":"****"/g')
         echo "$FILTERED_LOGS"
         FAILED=$(echo "$FILTERED_LOGS" | grep -oP 'failed: *\K\d+')
         PASSED=$(echo "$FILTERED_LOGS" | grep -oP 'passed: *\K\d+')
