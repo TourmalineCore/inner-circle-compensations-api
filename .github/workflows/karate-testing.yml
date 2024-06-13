@@ -27,7 +27,7 @@ jobs:
                                  | sed -E 's/"Authorization":"[^"]*"/"Authorization":"****"/g' \
                                  | sed -E 's/"X-DEBUG-TOKEN":[^,}]*"[^"]*"/"X-DEBUG-TOKEN":"****"/g' \
                                  | sed -E 's/accessToken":\{[^}]*\}/accessToken":{"value":"****"}/g' \
-                                 | sed -E 's/X-DEBUG-TOKEN: [^ ]*/X-DEBUG-TOKEN: ****/g')
+                                 | sed -E 's/X-DEBUG-TOKEN: [^ ]*/X-DEBUG-TOKEN: ****/g') 
         echo "$FILTERED_LOGS"
         FAILED=$(echo "$FILTERED_LOGS" | grep -oP 'failed: *\K\d+')
         PASSED=$(echo "$FILTERED_LOGS" | grep -oP 'passed: *\K\d+')
