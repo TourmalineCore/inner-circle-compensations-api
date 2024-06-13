@@ -3,7 +3,7 @@ Feature: Test Flow
 # https://github.com/karatelabs/karate?tab=readme-ov-file#karate-fork
 
 Background:
-* url 'http://localhost:1080/mockserver/verify'
+* url 'http://localhost:1080/mockServer/verify'
 * header Content-Type = 'application/json'
 
 Scenario: e2e test flow
@@ -11,10 +11,13 @@ Scenario: e2e test flow
     * def jsUtils = read('jsUtils.js')
     * def authApiRootUrl = jsUtils().getEnvVariable('AUTH_API_ROOT_URL')
     * def apiRootUrl = jsUtils().getEnvVariable('API_ROOT_URL')
+    * def authLogin = jsUtils().getEnvVariable('AUTH_LOGIN')
+    * def authPassword = jsUtils().getEnvVariable('AUTH_PASSWORD')
 
     # Authentication
     Given url authApiRootUrl
     And path '/auth/login'
+    And request {"login": #(authLogin), "password": #(authPassword)}
     And method POST
     Then status 200
 
@@ -39,7 +42,7 @@ Scenario: e2e test flow
     # Create compensation
     Given url apiRootUrl
     And path '/api/compensations/create'
-    And request {"compensations":[{"typeId":6,"comment":"my compensation","amount":700}],"dateCompensation":"2023-12"}
+    And request {"compensations":[{"typeId":6,"comment":"my compensation","amount":700}],"compensationRequestedForYearAndMonth":"2023-12"}
     When method POST
     Then status 200
     * def newId = response[0]
