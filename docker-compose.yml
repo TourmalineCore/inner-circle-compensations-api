@@ -45,32 +45,26 @@ services:
       - compensations-deb
 
   local-karate-tests:
-    container_name: 'karate-tests'
+    container_name: 'local-karate-tests'
+    extends:
+            file: templates.yml
+            service: karate-tests
     profiles: ["MockForPullRequest"]
-    build:
-      dockerfile: KarateDockerfile
-      context: .
-    depends_on:
-      - api
-    command: ["karate", "/karate"]
-    volumes:
-      - .:/karate
     environment:
       AUTH_API_ROOT_URL: "http://mockServer:1080"
       API_ROOT_URL: "http://api"
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
+      AUTH_LOGIN: "any_login"
+      AUTH_PASSWORD: "any_password"
     networks:
       - compensations-deb
-
+      
   production-karate-tests:
     container_name: 'production-karate-tests'
+    extends:
+            file: templates.yml
+            service: karate-tests
     profiles: ["ProdForDeployment"]
-    build:
-      dockerfile: KarateDockerfile
-      context: .
-    command: ["karate", "/karate"]
-    volumes:
-      - .:/karate
     environment:
       AUTH_API_ROOT_URL: "https://innercircle.tourmalinecore.com/api"
       API_ROOT_URL: "https://innercircle.tourmalinecore.com"

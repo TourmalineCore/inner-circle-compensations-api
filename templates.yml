@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  karate-tests:
+    build:
+      dockerfile: KarateDockerfile
+      context: .
+    command: ["karate", "/karate"]
+    volumes:
+      - .:/karate
+    
