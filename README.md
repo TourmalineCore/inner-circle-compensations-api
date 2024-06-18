@@ -10,7 +10,7 @@ or later (also can be used on Mac)
 
 ## Getting started
 
-You need to create an internal network for configuring interaction between different back-end services.  
+You need to create an internal network for configuring interaction between different back-end services from other docker-composes.  
 You can do it using the following command in your terminal: 
 ```
 docker network create ic-backend-deb
@@ -19,7 +19,7 @@ Note: If you already has this network, skip this step
 
 To start the service, you should go to the solution folder and enter this command in the terminal. This command starts the service in Docker and raises the database.
 ```
-docker-compose --profile ide-run up -d
+docker-compose --profile MockForDevelopment up -d
 ```
 To run the project use the keyboard shortcut `Ctrl+F5` (or `Cmd+F5` for Mac)
 
@@ -33,8 +33,11 @@ http://localhost:5273/index.html
 To run tests, you need to open the project in VS Code and Visual Studio.
 Enter this command in Visual Studio
 ```
-docker-compose --profile local-run up -d
+docker-compose --profile MockForPullRequest up -d
 ```
+Go to local-karate-tests docker container, open logs and see the result
+
+or
 
 Go to VS Code
 1. Install the extension "Dev Containers" (extension id: ms-vscode-remote.remote-containers)
@@ -52,3 +55,17 @@ java -jar /karate.jar .
 - LocalEnvForDevelopment - used locally when you run the service in Visual Studio and you want to connect to its external deps from Local Env (ToDo not there yet)
 - ProdForDevelopment - used locally when you run the service in Visual Studio and want to connect to its external deps from Prod specially dedicated Local Development Tenant (ToDo, need to complete tenants, secrets need to be available in the developer PC env vars)
 - ProdForDeployment - used when we run the service in Prod, it shouldn't contain any secrets, it should be a Release build, using real Prod external deps
+
+## Docker-compose profiles
+To **raise the database and run project in IDE**, use
+```
+docker-compose --profile MockForDevelopment up -d
+```
+To **run all system in Docker and see Karate test results in karate-tests container logs (it runs on service, which started in Docker (not production))**, use
+```
+docker-compose --profile MockForPullRequest up -d command
+```
+To **run Karate tests on production**, use
+```
+docker-compose --profile ProdForDeployment up -d command
+```
