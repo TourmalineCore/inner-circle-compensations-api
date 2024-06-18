@@ -15,8 +15,8 @@ services:
     networks:
       - compensations-deb
 
-  mockServer:
-    container_name: 'mockServer'
+  mockserver:
+    container_name: 'mockserver'
     image: mockserver/mockserver:5.15.0
     profiles: ["MockForPullRequest"]
     command: -logLevel INFO
@@ -44,14 +44,14 @@ services:
     networks:
       - compensations-deb
 
-  local-karate-tests:
+  local-karate-tests: # Karate-tests on local environment with mock-server
     container_name: 'local-karate-tests'
     extends:
             file: templates.yml
             service: karate-tests
     profiles: ["MockForPullRequest"]
     environment:
-      AUTH_API_ROOT_URL: "http://mockServer:1080"
+      AUTH_API_ROOT_URL: "http://mockserver:1080"
       API_ROOT_URL: "http://api"
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
       AUTH_LOGIN: "any_login"
@@ -59,7 +59,7 @@ services:
     networks:
       - compensations-deb
       
-  production-karate-tests:
+  production-karate-tests: # Karate-tests on production environment
     container_name: 'production-karate-tests'
     extends:
             file: templates.yml
@@ -73,6 +73,8 @@ services:
       AUTH_PASSWORD: ${AUTH_PASSWORD}
 
 networks:
-  compensations-deb: {}
-  ic-backend-deb:
+  compensations-deb: {} # Internal network for communication of containers of the same docker-compose
+  ic-backend-deb: # An external network used to communicate containers from different docker-compose. 
+                  # It must match the network name of another docker-compose and be created by a separate command 
+                  # before launching all docker-compose
     external: true
