@@ -3,7 +3,9 @@ version: "3.8"
 services:
   db:
     image: postgres:13
-    profiles: ["MockForPullRequest", "MockForDevelopment"]
+    profiles: ["MockForPullRequest", "MockForDevelopment"] # The database is required 
+                                                           # to run the application from the IDE and 
+                                                           # to run it from docker-compose completely
     restart: always
     container_name: 'db'
     environment:
@@ -15,7 +17,7 @@ services:
     networks:
       - compensations-network
 
-  mockserver:
+  mockserver: # Used for simulating external dependencies
     container_name: 'mockserver'
     image: mockserver/mockserver:5.15.0
     profiles: ["MockForPullRequest"]
@@ -46,6 +48,7 @@ services:
 
   local-karate-tests: # Karate-tests on local environment with mock-server
     container_name: 'local-karate-tests'
+    # Use the template from the templates.yml file to avoid duplicate code
     extends:
             file: templates.yml
             service: karate-tests
@@ -61,6 +64,7 @@ services:
       
   production-karate-tests: # Karate-tests on production environment
     container_name: 'production-karate-tests'
+    # Use the template from the templates.yml file to avoid duplicate code
     extends:
             file: templates.yml
             service: karate-tests
