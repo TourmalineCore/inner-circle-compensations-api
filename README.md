@@ -10,7 +10,7 @@ or later (also can be used on Mac)
 
 ## Getting started
 
-You need to create an internal network for configuring interaction between different back-end services.  
+You need to create an internal network for configuring interaction between different back-end services from other docker-composes.  
 You can do it using the following command in your terminal: 
 ```
 docker network create ic-backend-deb
@@ -35,6 +35,9 @@ Enter this command in Visual Studio
 ```
 docker-compose --profile MockForPullRequest up -d
 ```
+Go to local-karate-tests docker container, open logs and see the result
+
+or
 
 Go to VS Code
 1. Install the extension "Dev Containers" (extension id: ms-vscode-remote.remote-containers)
