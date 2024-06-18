@@ -54,6 +54,15 @@ java -jar /karate.jar .
 - ProdForDeployment - used when we run the service in Prod, it shouldn't contain any secrets, it should be a Release build, using real Prod external deps
 
 ## Docker-compose profiles
-To **raise the database and run project in IDE**, use `docker-compose --profile MockForDevelopment up -d` command</br></br>
-To **run all system in Docker**, use `docker-compose --profile MockForPullRequest up -d command`. Also there you can see Karate test results in karate-tests container logs. It runs on service, which started in Docker (not production)</br></br>
-To **run Karate tests on production**, use `docker-compose --profile ProdForDeployment up -d command`</br></br>
+To **raise the database and run project in IDE**, use
+```
+docker-compose --profile MockForDevelopment up -d
+```
+To **run all system in Docker and see Karate test results in karate-tests container logs (it runs on service, which started in Docker (not production))**, use
+```
+docker-compose --profile MockForPullRequest up -d command
+```
+To **run Karate tests on production**, use
+```
+docker-compose --profile ProdForDeployment up -d command
+```
