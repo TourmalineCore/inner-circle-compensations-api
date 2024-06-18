@@ -52,3 +52,8 @@ java -jar /karate.jar .
 - LocalEnvForDevelopment - used locally when you run the service in Visual Studio and you want to connect to its external deps from Local Env (ToDo not there yet)
 - ProdForDevelopment - used locally when you run the service in Visual Studio and want to connect to its external deps from Prod specially dedicated Local Development Tenant (ToDo, need to complete tenants, secrets need to be available in the developer PC env vars)
 - ProdForDeployment - used when we run the service in Prod, it shouldn't contain any secrets, it should be a Release build, using real Prod external deps
+
+## Docker-compose profiles
+To **raise the database and run project in IDE**, use `docker-compose --profile MockForDevelopment up -d` command</br></br>
+To **run all system in Docker**, use `docker-compose --profile MockForPullRequest up -d command`. Also there you can see Karate test results in karate-tests container logs. It runs on service, which started in Docker (not production)</br></br>
+To **run Karate tests on production**, use `docker-compose --profile ProdForDeployment up -d command`</br></br>
