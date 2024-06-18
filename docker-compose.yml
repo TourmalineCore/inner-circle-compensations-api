@@ -13,7 +13,7 @@ services:
     ports:
       - 11237:5432
     networks:
-      - compensations-deb
+      - compensations-network
 
   mockserver:
     container_name: 'mockserver'
@@ -27,7 +27,7 @@ services:
     environment:
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/initializer.json
     networks:
-      - compensations-deb
+      - compensations-network
 
   api:
     container_name: 'api'
@@ -42,7 +42,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: "MockForPullRequest"
     networks:
-      - compensations-deb
+      - compensations-network
 
   local-karate-tests: # Karate-tests on local environment with mock-server
     container_name: 'local-karate-tests'
@@ -57,7 +57,7 @@ services:
       AUTH_LOGIN: "any_login"
       AUTH_PASSWORD: "any_password"
     networks:
-      - compensations-deb
+      - compensations-network
       
   production-karate-tests: # Karate-tests on production environment
     container_name: 'production-karate-tests'
@@ -73,7 +73,7 @@ services:
       AUTH_PASSWORD: ${AUTH_PASSWORD}
 
 networks:
-  compensations-deb: {} # Internal network for communication of containers of the same docker-compose
+  compensations-network: {} # Internal network for communication of containers of the same docker-compose
   ic-backend-deb: # An external network used to communicate containers from different docker-compose. 
                   # It must match the network name of another docker-compose and be created by a separate command 
                   # before launching all docker-compose
