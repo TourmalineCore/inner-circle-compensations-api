@@ -3,7 +3,7 @@ version: "3.8"
 services:
   db:
     image: postgres:13
-    profiles: ["local-run", "ide-run"]
+    profiles: ["MockForPullRequest", "MockForDevelopment"]
     restart: always
     container_name: 'db'
     environment:
@@ -18,7 +18,7 @@ services:
   mockServer:
     container_name: 'mockServer'
     image: mockserver/mockserver:5.15.0
-    profiles: ["local-run"]
+    profiles: ["MockForPullRequest"]
     command: -logLevel INFO
     ports:
       - 1080:1080
@@ -31,7 +31,7 @@ services:
 
   api:
     container_name: 'api'
-    profiles: ["local-run"]
+    profiles: ["MockForPullRequest"]
     build:
       context: .
       dockerfile: Api/Dockerfile
@@ -44,9 +44,9 @@ services:
     networks:
       - compensations-deb
 
-  karate-tests:
+  local-karate-tests:
     container_name: 'karate-tests'
-    profiles: ["local-run"]
+    profiles: ["MockForPullRequest"]
     build:
       dockerfile: KarateDockerfile
       context: .
@@ -64,7 +64,7 @@ services:
 
   production-karate-tests:
     container_name: 'production-karate-tests'
-    profiles: ["production-e2e-tests"]
+    profiles: ["ProdForDeployment"]
     build:
       dockerfile: KarateDockerfile
       context: .
