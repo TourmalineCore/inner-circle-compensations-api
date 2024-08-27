@@ -42,7 +42,7 @@ jobs:
           docker build -t $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:latest -t $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:${{ github.sha }} -f Api/Dockerfile .
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:latest
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:${{ github.sha }}
-  deploy-to-dev-k8s:
+  deploy-to-prod-k8s:
     needs: build-image
     name: Deploy service to k8s for production environment  
     runs-on: ubuntu-22.04
@@ -68,7 +68,7 @@ jobs:
 
   production-test:
     # Image to run project and tests
-    needs: deploy-to-dev-k8s
+    needs: deploy-to-prod-k8s
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
