@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Application;
 using Application.Dtos;
 using Application.Services;
 using Core;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TourmalineCore.AspNetCore.JwtAuthentication.Core.Filters;
-using Application;
 
 namespace Api.Controllers;
 
@@ -13,7 +13,7 @@ namespace Api.Controllers;
 public class CompensationController : Controller
 {
     private readonly CompensationsService _compensationsService;
-    private readonly  IInnerCircleHttpClient _client;
+    private readonly IInnerCircleHttpClient _client;
 
     public CompensationController(CompensationsService compensationsService, IInnerCircleHttpClient client)
     {

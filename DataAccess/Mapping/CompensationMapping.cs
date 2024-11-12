@@ -1,8 +1,8 @@
+using Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NodaTime;
-using Core;
 
 namespace DataAccess.Mapping;
 

@@ -1,5 +1,5 @@
-using DataAccess;
 using Core;
+using DataAccess;
 
 namespace Application.Commands;
 

@@ -22,7 +22,8 @@ public class Compensation
 
     public DateOnly CompensationRequestedForYearAndMonth { get; set; }
 
-    public Compensation() {
+    public Compensation()
+    {
     }
 
     public Compensation(long typeId, string? comment, double amount, Employee employee, string compensationRequestedForYearAndMonth, bool isPaid = false)

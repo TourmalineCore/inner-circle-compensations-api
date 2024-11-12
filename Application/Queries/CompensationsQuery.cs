@@ -1,7 +1,7 @@
 using Application.Queries.Contracts;
-using Microsoft.EntityFrameworkCore;
-using DataAccess;
 using Core;
+using DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Queries;
 
