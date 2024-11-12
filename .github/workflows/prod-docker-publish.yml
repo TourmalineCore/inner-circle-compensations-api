@@ -4,14 +4,13 @@ on:
   push:
     branches:
       - master
-      - feature/decrease-limits
-      
   pull_request:
 
 env:
   GITHUB_REGISTRY: ghcr.io
 
 jobs:
+  
   unit-tests:
     name: Run unit tests
     if: github.event_name == 'push'
@@ -43,9 +42,10 @@ jobs:
           docker build -t $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:latest -t $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:${{ github.sha }} -f Api/Dockerfile .
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:latest
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:${{ github.sha }}
+  
   deploy-to-prod-k8s:
     needs: build-image
-    name: Deploy service to k8s for production environment  
+    name: Deploy service to k8s for prod environment  
     runs-on: ubuntu-22.04
     steps:
       - name: checkout
