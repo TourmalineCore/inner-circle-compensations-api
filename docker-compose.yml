@@ -1,24 +1,41 @@
-version: "3.8"
-
 services:
-  db:
+  compensations-db:
     image: postgres:13
-    profiles: ["local-run", "ide-run"]
+    profiles: ['MockForDevelopment', 'db-only']
     restart: always
-    container_name: 'db'
+    container_name: 'compensations-db'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: Compensations
+      POSTGRES_DB: compensations-db
     ports:
-      - 11237:5432
+      - 10005:5432
     networks:
-      - compensations-deb
+      - compensations-network
+
+  compensations-api:
+    container_name: 'compensations-api'
+    profiles: ['MockForDevelopment']
+    build:
+      context: .
+      dockerfile: Api/Dockerfile
+    ports:
+      - 10006:80
+    depends_on:
+      - compensations-db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=MockForDevelopment
+      - LOGS_PATH=/var/log/dev-compensations-api
+      - ConnectionStrings__DefaultConnection=User ID=postgres;Password=postgres;Host=compensations-db;port=5432;Database=compensations-db
+      - AuthenticationOptions__PublicSigningKey=MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAz+luHwhsNo4aQxYNCkaxcqL/HUcqWG1zz3pCpbyW5nbgxoo+Xw0jwAqVeRlrWHZf0WszbPObyCpmGVifyj6n0PSp5Np7431zjUhRUkxwyNSyVE5BWw5aJLyLB5EF9HH39CqtxdtWmYuLzhBS5fZT4tyR4xlQffNTxylg7xZgLfunUDRuLxdqR0JO3sjebgogrDVvHj3sif46uitipeTfUyCtqBG/JngPkMbDMNRkTH6QXnXfLgpX5Lr21O4PZPIBwCXzPCTCDMgbXHLvAzdlqgVYJcLf9xXPtVkPGOv8y+hbSTAyCNLViOLKKm2a2W4bPiElDIDwbtbHesj8zHPlpP5Q7QMtT168UxetgUeKsr5kfpxtLpE/QO4GkkqTA6rV7PQKrCTY0B5V8ZD8Ir/hlOKk8jxGe9NLui+8rLnnwJUZErT7Swp9yQL1eed2YtdrcR3q5eOE8+2pkzwjbEoFuIQidDKOghrZOwf6j217fme/xE+aEP0OPv5z07kJr2torh7tUefrVerT4Krj5LVl4DgdlkHAuILWOaYdSoLnRrsrfFa9Y1alM2D/juH9+YtaR/YjNWOhdZNMNyoDT08SbgE81ZbKmVgLGaWFLcMn/LBD6DBeRb5dRx12QZnv0jGJLVVgjTe9EqrjVF92ahGRljDIGjNzEI2f2syc0/qKS4sCAwEAAQ==
+      - InnerCircleServiceUrls__EmployeeServiceUrl=http://employees-api:80/api
+    networks:
+      - compensations-network
 
   mockServer:
     container_name: 'mockServer'
+    profiles: ["MockForPullRequest"]
     image: mockserver/mockserver:5.15.0
-    profiles: ["local-run"]
     command: -logLevel INFO
     ports:
       - 1080:1080
@@ -27,26 +44,11 @@ services:
     environment:
       MOCKSERVER_INITIALIZATION_JSON_PATH: /config/initializer.json
     networks:
-      - compensations-deb
-
-  api:
-    container_name: 'api'
-    profiles: ["local-run"]
-    build:
-      context: .
-      dockerfile: Api/Dockerfile
-    ports:
-      - "5283:80"
-    depends_on:
-      - db
-    environment:
-      ASPNETCORE_ENVIRONMENT: "MockForPullRequest"
-    networks:
-      - compensations-deb
+      - compensations-network
 
   karate-tests:
     container_name: 'karate-tests'
-    profiles: ["local-run"]
+    profiles: ["MockForPullRequest"]
     build:
       dockerfile: KarateDockerfile
       context: .
@@ -60,7 +62,7 @@ services:
       API_ROOT_URL: "http://api"
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
     networks:
-      - compensations-deb
+      - compensations-network
 
   production-karate-tests:
     container_name: 'production-karate-tests'
@@ -79,6 +81,6 @@ services:
       AUTH_PASSWORD: ${AUTH_PASSWORD}
 
 networks:
-  compensations-deb: {}
+  compensations-network: {}
   ic-backend-deb:
     external: true
