@@ -53,7 +53,7 @@ services:
       dockerfile: KarateDockerfile
       context: .
     depends_on:
-      - api
+      - compensations-api
     command: ["karate", "/karate"]
     volumes:
       - .:/karate
