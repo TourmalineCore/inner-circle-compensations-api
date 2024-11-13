@@ -1,9 +1,9 @@
 services:
   compensations-db:
-    image: postgres:13
+    container_name: 'compensations-db'
+    image: postgres:14.2-alpine
     profiles: ['MockForDevelopment', 'db-only']
     restart: always
-    container_name: 'compensations-db'
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
