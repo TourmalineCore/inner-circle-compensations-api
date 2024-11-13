@@ -2,7 +2,7 @@ services:
   compensations-db:
     container_name: 'compensations-db'
     image: postgres:14.2-alpine
-    profiles: ['MockForDevelopment', 'db-only']
+    profiles: ['MockForDevelopment', 'db-only', 'MockForPullRequest']
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -20,7 +20,7 @@ services:
 
   compensations-api:
     container_name: 'compensations-api'
-    profiles: ['MockForDevelopment']
+    profiles: ['MockForDevelopment', 'MockForPullRequest']
     build:
       context: .
       dockerfile: Api/Dockerfile
@@ -40,7 +40,7 @@ services:
 
   mockServer:
     container_name: 'mockServer'
-    profiles: ["MockForPullRequest"]
+    profiles: ['MockForPullRequest']
     image: mockserver/mockserver:5.15.0
     command: -logLevel INFO
     ports:
@@ -54,12 +54,13 @@ services:
 
   karate-tests:
     container_name: 'karate-tests'
-    profiles: ["MockForPullRequest"]
+    profiles: ['MockForPullRequest']
     build:
       dockerfile: KarateDockerfile
       context: .
     depends_on:
       - compensations-api
+      - mockServer
     command: ["karate", "/karate"]
     volumes:
       - .:/karate
@@ -72,7 +73,7 @@ services:
 
   production-karate-tests:
     container_name: 'production-karate-tests'
-    profiles: ["production-e2e-tests"]
+    profiles: ['production-e2e-tests']
     build:
       dockerfile: KarateDockerfile
       context: .
