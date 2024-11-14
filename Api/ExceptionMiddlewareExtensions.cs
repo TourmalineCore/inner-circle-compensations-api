@@ -1,6 +1,6 @@
+using System.Net;
 using Api.Models;
 using Microsoft.AspNetCore.Diagnostics;
-using System.Net;
 
 namespace Api;
 

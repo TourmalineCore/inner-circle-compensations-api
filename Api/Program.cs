@@ -1,15 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging.EventLog;
-using Application;
-using DataAccess;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using Microsoft.OpenApi.Models;
 using Api;
+using Application;
+using Application.Services.Options;
+using DataAccess;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging.EventLog;
+using Microsoft.OpenApi.Models;
 using TourmalineCore.AspNetCore.JwtAuthentication.Core;
 using TourmalineCore.AspNetCore.JwtAuthentication.Core.Options;
-using Application.Services.Options;
-using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 

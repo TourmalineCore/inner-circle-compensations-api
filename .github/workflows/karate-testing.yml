@@ -3,7 +3,7 @@ name: Karate Local Testing
 on:
   pull_request:
     branches:
-      - 'master'
+      - master
 
 env:
   GITHUB_REGISTRY: ghcr.io
@@ -18,7 +18,7 @@ jobs:
     # Hide credentials and token from logs, get the number of failed and passed tests
     # Find text with 'failed' and 'passed' in logs from karate-testing container
       run: |
-        LOGS=$(docker-compose --profile local-run up --abort-on-container-exit)
+        LOGS=$(docker compose --profile MockForPullRequest up --abort-on-container-exit)
         FILTERED_LOGS=$(echo "$LOGS" | sed -E 's/"login":"[^"]*"/"login":"****"/g' \
                                  | sed -E 's/"password":"[^"]*"/"password":"****"/g' \
                                  | sed -E 's/"accessToken":[^,}]*"[^"]*"/"accessToken":"****"/g' \
