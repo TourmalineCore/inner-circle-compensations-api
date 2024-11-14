@@ -19,8 +19,8 @@ services:
       - compensations-network
 
   compensations-api:
+    profiles: ['default']
     container_name: 'compensations-api'
-    profiles: ['MockForDevelopment', 'MockForPullRequest']
     build:
       context: .
       dockerfile: Api/Dockerfile
@@ -29,14 +29,25 @@ services:
     depends_on:
       compensations-db:
         condition: service_healthy
-    environment:
-      - ASPNETCORE_ENVIRONMENT=MockForDevelopment
-      - LOGS_PATH=/var/log/dev-compensations-api
-      - ConnectionStrings__DefaultConnection=User ID=postgres;Password=postgres;Host=compensations-db;port=5432;Database=compensations-db
-      - AuthenticationOptions__PublicSigningKey=MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAz+luHwhsNo4aQxYNCkaxcqL/HUcqWG1zz3pCpbyW5nbgxoo+Xw0jwAqVeRlrWHZf0WszbPObyCpmGVifyj6n0PSp5Np7431zjUhRUkxwyNSyVE5BWw5aJLyLB5EF9HH39CqtxdtWmYuLzhBS5fZT4tyR4xlQffNTxylg7xZgLfunUDRuLxdqR0JO3sjebgogrDVvHj3sif46uitipeTfUyCtqBG/JngPkMbDMNRkTH6QXnXfLgpX5Lr21O4PZPIBwCXzPCTCDMgbXHLvAzdlqgVYJcLf9xXPtVkPGOv8y+hbSTAyCNLViOLKKm2a2W4bPiElDIDwbtbHesj8zHPlpP5Q7QMtT168UxetgUeKsr5kfpxtLpE/QO4GkkqTA6rV7PQKrCTY0B5V8ZD8Ir/hlOKk8jxGe9NLui+8rLnnwJUZErT7Swp9yQL1eed2YtdrcR3q5eOE8+2pkzwjbEoFuIQidDKOghrZOwf6j217fme/xE+aEP0OPv5z07kJr2torh7tUefrVerT4Krj5LVl4DgdlkHAuILWOaYdSoLnRrsrfFa9Y1alM2D/juH9+YtaR/YjNWOhdZNMNyoDT08SbgE81ZbKmVgLGaWFLcMn/LBD6DBeRb5dRx12QZnv0jGJLVVgjTe9EqrjVF92ahGRljDIGjNzEI2f2syc0/qKS4sCAwEAAQ==
-      - InnerCircleServiceUrls__EmployeeServiceUrl=http://employees-api:80/api
     networks:
       - compensations-network
+
+  compensations-api-for-e2e:
+    container_name: 'compensations-api-for-e2e'
+    profiles: ['MockForPullRequest']
+    extends:
+      service: compensations-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=MockForPullRequest
+      - ASPNETCORE_HTTP_PORTS=80
+  
+  compensations-api-for-docker-run:
+    container_name: 'compensations-api-for-docker-run'
+    profiles: ['MockForDevelopment']
+    extends:
+      service: compensations-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=MockForDevelopment
 
   mockServer:
     container_name: 'mockServer'
@@ -59,14 +70,14 @@ services:
       dockerfile: KarateDockerfile
       context: .
     depends_on:
-      - compensations-api
+      - compensations-api-for-e2e
       - mockServer
     command: ["karate", "/karate"]
     volumes:
       - .:/karate
     environment:
       AUTH_API_ROOT_URL: "http://mockServer:1080"
-      API_ROOT_URL: "http://api"
+      API_ROOT_URL: "http://compensations-api-for-e2e"
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
     networks:
       - compensations-network
