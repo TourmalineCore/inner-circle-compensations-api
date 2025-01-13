@@ -36,7 +36,7 @@ public class CompensationController : Controller
     }
 
     [RequiresPermission(UserClaimsProvider.CanManageCompensations)]
-    [HttpPost("{id}/hard-delete")]
+    [HttpDelete("{id}/hard-delete")]
     public async Task DeleteAsync([FromRoute] long id)
     {
         await _compensationHardDeletionCommand.ExecuteAsync(id);
