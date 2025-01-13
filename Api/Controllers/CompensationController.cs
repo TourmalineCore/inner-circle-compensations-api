@@ -1,4 +1,5 @@
 using Application;
+using Application.Commands;
 using Application.Dtos;
 using Application.Services;
 using Core;
@@ -13,12 +14,17 @@ namespace Api.Controllers;
 public class CompensationController : Controller
 {
     private readonly CompensationsService _compensationsService;
+    private readonly CompensationHardDeletionCommand _compensationHardDeletionCommand;
     private readonly IInnerCircleHttpClient _client;
 
-    public CompensationController(CompensationsService compensationsService, IInnerCircleHttpClient client)
+    public CompensationController(
+        CompensationsService compensationsService, 
+        IInnerCircleHttpClient client,
+        CompensationHardDeletionCommand compensationHardDeletionCommand)
     {
         _compensationsService = compensationsService;
         _client = client;
+        _compensationHardDeletionCommand = compensationHardDeletionCommand;
     }
 
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
@@ -27,6 +33,13 @@ public class CompensationController : Controller
     {
         var employee = await _client.GetEmployeeAsync(User.GetCorporateEmail());
         return await _compensationsService.CreateAsync(dto, employee);
+    }
+
+    [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
+    [HttpPost("{id}/hard-delete")]
+    public async Task DeleteAsync([FromRoute] long id)
+    {
+        await _compensationHardDeletionCommand.ExecuteAsync(id);
     }
 
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
