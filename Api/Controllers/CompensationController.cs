@@ -35,7 +35,7 @@ public class CompensationController : Controller
         return await _compensationsService.CreateAsync(dto, employee);
     }
 
-    [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
+    [RequiresPermission(UserClaimsProvider.CanManageCompensations)]
     [HttpPost("{id}/hard-delete")]
     public async Task DeleteAsync([FromRoute] long id)
     {
