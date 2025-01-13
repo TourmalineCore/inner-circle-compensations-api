@@ -15,7 +15,8 @@ public static class CompensationTypes
     public const string Psychotherapy = "Psychotherapy";
     public const string MedicalConsultation = "Medical consultation";
     public const string Other = "Other";
-
+    public const string Sport = "Sport";
+    public const string OfficeExpenses = "Office expenses";
     public static List<CompensationType> GetTypeList()
     {
         return new List<CompensationType>
@@ -32,7 +33,9 @@ public static class CompensationTypes
             new CompensationType(10, BusinessTrip),
             new CompensationType(11, Psychotherapy),
             new CompensationType(12, MedicalConsultation),
-            new CompensationType(13, Other)
+            new CompensationType(13, Other),
+            new CompensationType(14, Sport),
+            new CompensationType(15, OfficeExpenses)
         };
     }
 
