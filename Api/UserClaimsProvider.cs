@@ -9,6 +9,7 @@ public class UserClaimsProvider : IUserClaimsProvider
 
     public const string CanRequestCompensations = "CanRequestCompensations";
     public const string CanManageCompensations = "CanManageCompensations";
+    public const string IsCompensationsHardDeleteAllowed = "IsCompensationsHardDeleteAllowed";
 
     public Task<List<Claim>> GetUserClaimsAsync(string login)
     {
