@@ -31,6 +31,7 @@ namespace Tests.Application.Commands
                 100.0, 
                 new Employee(), 
                 DateTime.Now.ToString(), 
+                1,
                 false);
             
             _context.Compensations.Add(compensation);

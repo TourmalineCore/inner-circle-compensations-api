@@ -1,4 +1,5 @@
 using Core;
+using System.ComponentModel;
 
 namespace Application.Dtos;
 
@@ -58,6 +59,9 @@ public class EmployeeCompensationDto
     public double Amount { get; }
 
     public string CompensationRequestedAtUtc { get; }
+    
+    [DefaultValue(1)]
+    public int Quantity { get; }
 
     public EmployeeCompensationDto(Compensation compensation)
     {
@@ -66,5 +70,6 @@ public class EmployeeCompensationDto
         Comment = compensation.Comment;
         Amount = compensation.Amount;
         CompensationRequestedAtUtc = compensation.CompensationRequestedAtUtc.ToString();
+        Quantity = compensation.Quantity;
     }
 }
