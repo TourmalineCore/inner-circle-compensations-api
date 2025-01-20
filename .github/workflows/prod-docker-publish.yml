@@ -38,12 +38,13 @@ jobs:
       - name: Build and push image
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-          PREFIX=$([[ "${{ github.head_ref }}" == feature/* ]] && echo "test" || echo "")
+          PREFIX=$([[ "${{ github.head_ref }}" == feature/* ]] && echo "/test" || echo "")
           docker build -t $GITHUB_REGISTRY/tourmalinecore/inner-circle${PREFIX}/compensations-api:latest \
             -t $GITHUB_REGISTRY/tourmalinecore/inner-circle${PREFIX}/compensations-api:${{ github.sha }} \
             -f Api/Dockerfile .
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle${PREFIX}/compensations-api:latest
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle${PREFIX}/compensations-api:${{ github.sha }}
+
 
   deploy-to-prod-k8s:
     needs: build-image
