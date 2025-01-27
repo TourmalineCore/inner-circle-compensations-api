@@ -27,6 +27,13 @@ namespace Tests.Application.Commands
         public async Task CreateAsync_ShouldCreateCompensation()
         {
             var tenantId = 1L;
+            var testEmployee = new Employee()
+            {
+                Id = 1,
+                TenantId = tenantId,
+                CorporateEmail = "test@tourmalinecore.com",
+                FullName = "Test Test Test"
+            };
 
             var compensationCreateDto = new CompensationCreateDto()
             {
@@ -46,13 +53,7 @@ namespace Tests.Application.Commands
 
             var compensationIds = await _command.ExecuteAsync(
                 compensationCreateDto, 
-                new Employee()
-                {
-                    Id = 1,
-                    TenantId = tenantId, 
-                    CorporateEmail = "test@tourmalinecore.com",
-                    FullName = "Test Test Test"
-                }
+                testEmployee
                 );
 
             var compensation = await _context.Compensations.FindAsync(compensationIds.First());
@@ -60,6 +61,42 @@ namespace Tests.Application.Commands
             Assert.Equal(1, compensation.Quantity);
             Assert.Equal(100, compensation.Amount);
             Assert.Equal(1, compensation.TypeId);
+        }
+
+        [Fact]
+        public async Task CreateWithZeroQuantityAsync_ShouldThrowException()
+        {
+            var tenantId = 1L;
+            var testEmployee = new Employee()
+            {
+                Id = 1,
+                TenantId = tenantId,
+                CorporateEmail = "test@tourmalinecore.com",
+                FullName = "Test Test Test"
+            };
+                       
+            var compensationCreateDto = new CompensationCreateDto()
+            {
+                Compensations = new List<CompensationDto>()
+                {
+                    new CompensationDto()
+                    {
+                        Amount = 100,
+                        Comment = "Test",
+                        IsPaid = false,
+                        Quantity = 0,
+                        TypeId = 1
+                    }
+                },
+                CompensationRequestedForYearAndMonth = "2024-12-31"
+            };
+
+            await Assert.ThrowsAsync<ArgumentException>(async () =>
+                await _command.ExecuteAsync(
+                    compensationCreateDto,
+                    testEmployee
+                )
+            );
         }
     }
 }
