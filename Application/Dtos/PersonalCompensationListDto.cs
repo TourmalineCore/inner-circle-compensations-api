@@ -21,7 +21,7 @@ public class PersonalCompensationListDto
             x.CompensationRequestedForYearAndMonth.ToString(),
             x.Quantity))
             .ToList();
-        TotalUnpaidAmount = Math.Round(compensations.Where(compensation => compensation.IsPaid == false).Sum(x => x.Amount), 2);
+        TotalUnpaidAmount = Math.Round(compensations.Where(compensation => compensation.IsPaid == false).Sum(x => x.Amount * x.Quantity), 2);
     }
 }
 
