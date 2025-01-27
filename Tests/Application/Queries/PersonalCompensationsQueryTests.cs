@@ -25,7 +25,8 @@ namespace Tests.Application.Queries
                 {
                     Id = 100500,
                     EmployeeId = 200,
-                    TenantId = 600
+                    TenantId = 600,
+                    Quantity = 1
                 }
             });
 
@@ -33,6 +34,7 @@ namespace Tests.Application.Queries
 
             Assert.Single(queryResult);
             Assert.Equal(100500, queryResult.Single().Id);
+            Assert.Equal(1, queryResult.Single().Quantity);
         }
 
         [Fact]
@@ -43,19 +45,22 @@ namespace Tests.Application.Queries
                 {
                     Id = 1,
                     EmployeeId = 777,
-                    TenantId = 12345
+                    TenantId = 12345,
+                    Quantity = 1
                 },
                 new Compensation
                 {
                     Id = 2,
                     EmployeeId = 777,
-                    TenantId = 69
+                    TenantId = 69,
+                    Quantity = 1
                 },
                 new Compensation
                 {
                     Id = 3,
                     EmployeeId = 777,
-                    TenantId = 12345
+                    TenantId = 12345,
+                    Quantity = 1
                 },
             });
 
@@ -63,6 +68,7 @@ namespace Tests.Application.Queries
 
             Assert.Single(queryResult);
             Assert.Equal(2, queryResult.Single().Id);
+            Assert.Equal(1, queryResult.Single().Quantity);
         }
 
         private static PersonalCompensationsQuery BuildQuery(List<Compensation> compensations)
