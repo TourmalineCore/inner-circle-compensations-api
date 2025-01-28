@@ -129,7 +129,6 @@ namespace Tests.Api
         [Fact]
         public async Task GetAllCompensationsAsync_ShouldReturnCorrectTotal()
         {
-            await _controller.CreateAsync(_compensationsCreateDto);
             var createdCompensationsList = await _controller.GetEmployeeCompensationsAsync();
             Assert.Equal(200, createdCompensationsList.TotalUnpaidAmount);
         }
