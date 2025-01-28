@@ -35,6 +35,39 @@ namespace Tests.Api
         private readonly Mock<CompensationStatusUpdateCommand> _compensationStatusUpdateCommandMock;
         private readonly Mock<IInnerCircleHttpClient> _iInnerCircleHttpClientMock;
         private readonly Mock<CompensationHardDeletionCommand> _compensationHardDeletionCommandMock;
+
+        private readonly Employee _testEmployee = new Employee()
+        {
+            Id = 1,
+            TenantId = 1,
+            CorporateEmail = "test@tourmalinecore.com",
+            FullName = "Test Test Test"
+        };
+
+        private readonly CompensationCreateDto _compensationsCreateDto = new CompensationCreateDto()
+        {
+            Compensations = new List<CompensationDto>()
+            {
+                new CompensationDto()
+                {
+                    Amount = 100,
+                    Comment = "Test",
+                    IsPaid = false,
+                    Quantity = 2,
+                    TypeId = 1
+                },
+                new CompensationDto()
+                {
+                    Amount = 300,
+                    Comment = "Test",
+                    IsPaid = true,
+                    Quantity = 1,
+                    TypeId = 2
+                }
+            },
+            CompensationRequestedForYearAndMonth = "2024-12-31"
+        };
+
         public CompensationControllerTests()
         {
             // Init inMemory database
@@ -78,53 +111,27 @@ namespace Tests.Api
             {
                 HttpContext = httpContext.Object
             };
+            
+            _iInnerCircleHttpClientMock
+                .Setup(x => x.GetEmployeeAsync("test@tourmalinecore.com"))
+                .ReturnsAsync(_testEmployee);
+        }
+
+        [Fact]
+        public async Task GetAdminAllCompensationsAsync_ShouldReturnCorrectTotal()
+        {
+            await _controller.CreateAsync(_compensationsCreateDto);
+            var createdCompensationsList = await _controller.GetAdminAllAsync(2024, 12);
+            Assert.Equal(500, createdCompensationsList.TotalAmount);
+            Assert.Equal(200, createdCompensationsList.TotalUnpaidAmount);
         }
 
         [Fact]
         public async Task GetAllCompensationsAsync_ShouldReturnCorrectTotal()
         {
-            var tenantId = 1L;
-
-            var employee = new Employee()
-            {
-                Id = 1,
-                TenantId = tenantId,
-                CorporateEmail = "test@tourmalinecore.com",
-                FullName = "Test Test Test"
-            };
-            
-            _iInnerCircleHttpClientMock
-                .Setup(x => x.GetEmployeeAsync("test@tourmalinecore.com"))
-                .ReturnsAsync(employee);
-            
-            var compensationCreateDto = new CompensationCreateDto()
-            {
-                Compensations = new List<CompensationDto>()
-                {
-                    new CompensationDto()
-                    {
-                        Amount = 100,
-                        Comment = "Test",
-                        IsPaid = false,
-                        Quantity = 2,
-                        TypeId = 1
-                    },
-                    new CompensationDto()
-                    {
-                        Amount = 300,
-                        Comment = "Test",
-                        IsPaid = true,
-                        Quantity = 1,
-                        TypeId = 2
-                    }
-                },
-                CompensationRequestedForYearAndMonth = "2024-12-31"
-            };
-
-            await _controller.CreateAsync(compensationCreateDto);
-            var createdCompensationsList = await _controller.GetAdminAllAsync(2024, 12);
-            Assert.Equal(500, createdCompensationsList.TotalAmount);
-            Assert.Equal(200, createdCompensationsList.TotalUnpaidAmount);
+            await _controller.CreateAsync(_compensationsCreateDto);
+            var createdCompensationsList = await _controller.GetEmployeeCompensationsAsync();
+            Assert.Equal(400, createdCompensationsList.TotalUnpaidAmount);
         }
     }
 }
