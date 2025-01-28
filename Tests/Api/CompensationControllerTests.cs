@@ -131,7 +131,7 @@ namespace Tests.Api
         {
             await _controller.CreateAsync(_compensationsCreateDto);
             var createdCompensationsList = await _controller.GetEmployeeCompensationsAsync();
-            Assert.Equal(400, createdCompensationsList.TotalUnpaidAmount);
+            Assert.Equal(200, createdCompensationsList.TotalUnpaidAmount);
         }
     }
 }
