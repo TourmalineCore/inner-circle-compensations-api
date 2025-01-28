@@ -113,7 +113,7 @@ namespace Tests.Api
                     {
                         Amount = 300,
                         Comment = "Test",
-                        IsPaid = false,
+                        IsPaid = true,
                         Quantity = 1,
                         TypeId = 2
                     }
@@ -124,7 +124,7 @@ namespace Tests.Api
             await _controller.CreateAsync(compensationCreateDto);
             var createdCompensationsList = await _controller.GetAdminAllAsync(2024, 12);
             Assert.Equal(500, createdCompensationsList.TotalAmount);
-            Assert.Equal(500, createdCompensationsList.TotalUnpaidAmount);
+            Assert.Equal(200, createdCompensationsList.TotalUnpaidAmount);
         }
     }
 }
