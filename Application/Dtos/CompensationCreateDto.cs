@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace Application.Dtos;
 
 public readonly struct CompensationCreateDto
@@ -16,4 +18,7 @@ public readonly struct CompensationDto
     public double Amount { get; init; }
 
     public bool IsPaid { get; init; }
+    
+    [DefaultValue(1)]
+    public int Quantity { get; init; }
 }

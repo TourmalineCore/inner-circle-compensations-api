@@ -28,19 +28,23 @@ jobs:
         run: dotnet test
         
   build-image:
-    name: Build and push service image 
+    name: Build and push service image
     runs-on: ubuntu-22.04
     needs: unit-tests
     steps:
-      - name: checkout
+      - name: Checkout code
         uses: actions/checkout@v1
+
       - name: Build and push image
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $ --password-stdin
-          docker build -t $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:latest -t $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:${{ github.sha }} -f Api/Dockerfile .
+          docker build -t $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:latest \
+            -t $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:${{ github.sha }} \
+            -f Api/Dockerfile .
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:latest
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:${{ github.sha }}
-  
+
+
   deploy-to-prod-k8s:
     needs: build-image
     name: Deploy service to k8s for prod environment  

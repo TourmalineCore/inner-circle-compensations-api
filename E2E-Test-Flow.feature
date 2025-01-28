@@ -42,7 +42,7 @@ Scenario: e2e test flow
     # Create compensation
     Given url apiRootUrl
     And path '/api/compensations/create'
-    And request {"compensations":[{"typeId":6,"comment":"my compensation","amount":700}],"compensationRequestedForYearAndMonth":"2023-12"}
+    And request {"compensations":[{"typeId":6,"comment":"my compensation","amount":700, "quantity":1}],"compensationRequestedForYearAndMonth":"2023-12"}
     When method POST
     Then status 200
     * def newId = response[0]
@@ -57,6 +57,7 @@ Scenario: e2e test flow
     # Check that the new compensation has isPaid = false
     * def newCompensation = response.list.find(x => x.id == newId)
     And newCompensation.isPaid == false
+    And newCompensation.quantity == 1
 
     # Update compensation status
     Given url apiRootUrl

@@ -22,11 +22,21 @@ public class Compensation
 
     public DateOnly CompensationRequestedForYearAndMonth { get; set; }
 
+    public int Quantity { get; set; }
+
     public Compensation()
     {
     }
 
-    public Compensation(long typeId, string? comment, double amount, Employee employee, string compensationRequestedForYearAndMonth, bool isPaid = false)
+    public Compensation(
+        long typeId, 
+        string? comment, 
+        double amount, 
+        Employee employee, 
+        string compensationRequestedForYearAndMonth, 
+        int quantity = 1, 
+        bool isPaid = false
+        )
     {
         if (!CompensationTypes.IsTypeExist(typeId))
         {
@@ -36,6 +46,11 @@ public class Compensation
         if (amount <= 0)
         {
             throw new ArgumentException($"Amount can't be zero or negative");
+        }
+
+        if (quantity <= 0)
+        {
+            throw new ArgumentException($"Quantity can't be zero or negative");
         }
 
         TypeId = typeId;
@@ -48,7 +63,7 @@ public class Compensation
         //CompensationRequestedAtUtc = Instant.FromDateTimeUtc(DateTime.UtcNow);
         var result = DateTime.Parse(compensationRequestedForYearAndMonth, null, System.Globalization.DateTimeStyles.RoundtripKind);
         CompensationRequestedForYearAndMonth = new DateOnly(result.Year, result.Month, 1);
-
+        Quantity = quantity;
     }
 
 }

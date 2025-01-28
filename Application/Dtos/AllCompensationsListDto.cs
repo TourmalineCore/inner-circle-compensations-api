@@ -1,4 +1,5 @@
 using Core;
+using System.ComponentModel;
 
 namespace Application.Dtos;
 
@@ -14,8 +15,8 @@ public class AllCompensationsListDto
     {
         Items = compensations.GroupBy(x => x.EmployeeId)
                      .Select(x => new ItemDto(x.ToList(), employees.FirstOrDefault(employee => employee.Id == x.Key)));
-        TotalAmount = Math.Round(compensations.Sum(x => x.Amount), 2);
-        TotalUnpaidAmount = Math.Round(compensations.Where(x => !x.IsPaid).Sum(x => x.Amount), 2);
+        TotalAmount = Math.Round(compensations.Sum(x => x.Amount * x.Quantity), 2);
+        TotalUnpaidAmount = Math.Round(compensations.Where(x => !x.IsPaid).Sum(x => x.Amount * x.Quantity), 2);
     }
 }
 
@@ -39,8 +40,8 @@ public class ItemDto
     {
         EmployeeFullName = employee.FullName;
         CompensationRequestedForYearAndMonth = employeeCompensations[0].CompensationRequestedForYearAndMonth.ToString();
-        TotalAmount = Math.Round(employeeCompensations.Sum(x => x.Amount), 2);
-        UnpaidAmount = Math.Round(employeeCompensations.Where(x => !x.IsPaid).Sum(x => x.Amount), 2);
+        TotalAmount = Math.Round(employeeCompensations.Sum(x => x.Amount * x.Quantity), 2);
+        UnpaidAmount = Math.Round(employeeCompensations.Where(x => !x.IsPaid).Sum(x => x.Amount * x.Quantity), 2);
         Compensations = employeeCompensations.Select(x => new EmployeeCompensationDto(x));
         EmployeeId = employee.Id;
         IsPaid = employeeCompensations.All(x => x.IsPaid == true);
@@ -58,6 +59,9 @@ public class EmployeeCompensationDto
     public double Amount { get; }
 
     public string CompensationRequestedAtUtc { get; }
+    
+    [DefaultValue(1)]
+    public int Quantity { get; }
 
     public EmployeeCompensationDto(Compensation compensation)
     {
@@ -66,5 +70,6 @@ public class EmployeeCompensationDto
         Comment = compensation.Comment;
         Amount = compensation.Amount;
         CompensationRequestedAtUtc = compensation.CompensationRequestedAtUtc.ToString();
+        Quantity = compensation.Quantity;
     }
 }
