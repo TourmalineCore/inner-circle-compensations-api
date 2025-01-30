@@ -32,6 +32,6 @@ jobs:
 
       - name: Run Karate Tests
         run: |
-          java -jar karate.jar src/test/java
+          java -jar /karate.jar .
 
           
