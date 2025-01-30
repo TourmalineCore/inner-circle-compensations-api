@@ -25,14 +25,12 @@ jobs:
       - name: Checkout api
         uses: actions/checkout@v4
 
+      - name: Download Karate JAR
+        run: curl -L https://github.com/karatelabs/karate/releases/latest/download/karate.jar -o karate.jar
+
       - name: Run Karate Tests
         run: |
-            cd ..
-            mvn test
-        env:
-          AUTH_API_ROOT_URL: "http://localhost:40100"
-          API_ROOT_URL: "http://localhost:40100"
-          AUTH_LOGIN: "test"
-          AUTH_PASSWORD: "test"
+          cd ..
+          java -jar /karate.jar .
 
           
