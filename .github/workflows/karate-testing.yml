@@ -26,11 +26,12 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Download Karate JAR
-        run: curl -L https://github.com/karatelabs/karate/releases/latest/download/karate.jar -o karate.jar
+        run: |
+          cd ..
+          curl -L https://github.com/karatelabs/karate/releases/latest/download/karate.jar -o karate.jar
 
       - name: Run Karate Tests
         run: |
-          cd ..
-          java -jar /karate.jar .
+          java -jar karate.jar src/test/java
 
           
