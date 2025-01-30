@@ -29,7 +29,7 @@ jobs:
         run: |
           cd ..
           cd inner-circle-compensations-api/
-          curl -L https://github.com/karatelabs/karate/releases/latest/download/karate.jar -o karate.jar
+          curl -L https://github.com/karatelabs/karate/releases/download/v1.5.1/karate-1.5.1.jar -o karate.jar
 
       - name: Run Karate Tests
         run: |
