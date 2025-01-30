@@ -28,7 +28,9 @@ jobs:
       - name: Download Karate JAR
         run: |
           cd ..
+          ls -l
           curl -L https://github.com/karatelabs/karate/releases/latest/download/karate.jar -o karate.jar
+          ls -l
 
       - name: Run Karate Tests
         run: |
