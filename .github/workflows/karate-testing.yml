@@ -28,14 +28,12 @@ jobs:
       - name: Download Karate JAR
         run: |
           cd ..
-          ls -l
           cd inner-circle-compensations-api/
           curl -L https://github.com/karatelabs/karate/releases/latest/download/karate.jar -o karate.jar
-          ls -l
 
       - name: Run Karate Tests
         run: |
           ls -l
-          java -jar /karate.jar .
+          java -jar karate.jar .
 
           
