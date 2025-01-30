@@ -27,6 +27,7 @@ jobs:
 
       - name: Run Karate Tests
         run: |
+            cd ..
             mvn test
         env:
           AUTH_API_ROOT_URL: "http://localhost:40100"
