@@ -45,6 +45,7 @@ jobs:
 
   deploy-to-prod:
     runs-on: ubuntu-22.04
+    needs: build-image
     name: Deploy to production environment
     # if: github.event_name == 'push'
     steps:

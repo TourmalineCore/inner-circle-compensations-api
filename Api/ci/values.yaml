@@ -50,6 +50,9 @@ extraConfigMapEnvVars: {}
 
 extraSecretEnvVars:
   InnerCircleServiceUrls__EmployeesServiceUrl: ${{ secrets.SALARY_SERVICE_URL }}
+  ConnectionStrings__DefaultConnection: ${{ secrets.POSTGRESQL_CONNECTION_STRING }}
+  AuthenticationOptions__PublicSigningKey: ${{ secrets.PUBLIC_SIGNING_KEY }}
+
 
 extraSecretEnvVarsEncoded: |
   {{- range $k, $v := .Values.extraSecretEnvVars }}
