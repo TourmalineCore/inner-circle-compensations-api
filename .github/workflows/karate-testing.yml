@@ -40,7 +40,6 @@ jobs:
       - name: Run Karate Tests
         run: |
           java -jar karate.jar .
-                env:
         env:
           AUTH_API_ROOT_URL: "http://localhost:40100"
           API_ROOT_URL: "http://localhost:40100"
