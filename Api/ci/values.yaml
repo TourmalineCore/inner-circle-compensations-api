@@ -1,0 +1,130 @@
+# Here you can find docs bitnami/nginx chart https://github.com/bitnami/charts/blob/main/bitnami/nginx/README.md
+
+image:
+  registry: ghcr.io
+  repository: tourmalinecore/inner-circle/compensations-api
+  tag: latest
+  pullPolicy: Always
+
+replicaCount: 1
+
+# 1000m means 100% of processor time 
+# 1m means 0.1% of processor time.
+# at start pod is being allocated with resources from requests, if it needs more consumption can grow until limits.
+# if pod uses more resources than limits in spite of the reason kube-system will perform a forced restart
+resources:
+  limits:
+    cpu: 150m
+    memory: 300Mi
+  requests:
+    cpu: 1m
+    memory: 250Mi
+
+containerPorts:
+  http: 80
+
+livenessProbe:
+  enabled: false
+
+readinessProbe:
+  enabled: false
+
+service:
+  type: ClusterIP
+  ports:
+    http: 80
+
+ingress:
+  enabled: true
+  hostname: {{ secrets.HOST }}
+  pathType: ImplementationSpecific
+  apiVersion: ""
+  path: /api/compensations(/|$)(.*)
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /api/compensations/$2
+  tls: true
+
+extraConfigMapEnvVars: {}
+
+extraSecretEnvVars:
+  SALARY_SERVICE_URL: {{ secrets.SALARY_SERVICE_URL }}
+
+extraSecretEnvVarsEncoded: |
+  {{- range $k, $v := .Values.extraSecretEnvVars }}
+  {{- if kindIs "int64" $v}}
+  {{ $k }}: {{ $v | quote | b64enc | quote}}
+  {{- else}}
+  {{ $k }}: {{ $v | b64enc | quote}}
+  {{- end}}
+  {{- end }}
+
+extraEnvVarsCM: "{{ include \"common.names.fullname\" . }}"
+
+extraEnvVarsSecret: "{{ include \"common.names.fullname\" . }}"
+
+serviceAccount:
+  create: false
+
+networkPolicy:
+  enabled: false
+
+extraDeploy:
+  - |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ include "common.names.fullname" . }}
+      namespace: {{ include "common.names.namespace" . | quote }}
+      labels: {{- include "common.labels.standard" . | nindent 6 }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 6 }}
+        {{- end }}
+      {{- if .Values.commonAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 6 }}
+      {{- end }}
+    data:
+      {{- if .Values.extraConfigMapEnvVars }}
+      {{- include "common.tplvalues.render" ( dict "value" .Values.extraConfigMapEnvVars "context" $ ) | nindent 6 }}
+      {{- end }}
+  - |
+    {{ $secret_name := printf "%s" ( include "common.names.fullname" .) }}
+    {{- if eq ( tpl .Values.extraEnvVarsSecret . ) $secret_name }}
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: {{ $secret_name }}
+      namespace: {{ include "common.names.namespace" . | quote }}
+      labels: {{- include "common.labels.standard" . | nindent 6 }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 6 }}
+        {{- end }}
+      {{- if .Values.commonAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 6 }}
+      {{- end }}
+    type: Opaque
+    data:
+      {{- if .Values.extraSecretEnvVarsEncoded }}
+      {{- include "common.tplvalues.render" ( dict "value" .Values.extraSecretEnvVarsEncoded "context" $ ) | trim | nindent 6 }}
+      {{- end }}
+    {{- end }}
+  - |
+    {{ $docker_secret_name := printf "%s%s" ( include "common.names.fullname" .) "-docker-secret" }}
+    {{- if has $docker_secret_name .Values.image.pullSecrets }}
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: {{ $docker_secret_name }}
+      namespace: {{ include "common.names.namespace" . | quote }}
+      labels: {{- include "common.labels.standard" . | nindent 6 }}
+        {{- if .Values.commonLabels }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 6 }}
+        {{- end }}
+      {{- if .Values.commonAnnotations }}
+      annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 6 }}
+      {{- end }}
+    type: kubernetes.io/dockerconfigjson
+    data:
+      .dockerconfigjson: {{ printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.image.registry (printf "%s:%s" (.Values.image.pullCredentials.username | default "") (.Values.image.pullCredentials.password | default "") | b64enc) | b64enc }}
+    {{- end }}

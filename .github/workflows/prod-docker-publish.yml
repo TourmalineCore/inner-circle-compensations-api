@@ -43,34 +43,30 @@ jobs:
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:latest
           docker push $GITHUB_REGISTRY/tourmalinecore/inner-circle/compensations-api:${{ github.sha }}
 
-  deploy-to-prod-k8s:
-    needs: build-image
-    name: Deploy service to k8s for prod environment  
-    if: github.event_name == 'push'
+  deploy-to-prod:
     runs-on: ubuntu-22.04
+    name: Deploy to production environment
+    # if: github.event_name == 'push'
     steps:
-      - name: checkout
-        uses: actions/checkout@v1
+      - name: Check out the repo
+        uses: actions/checkout@v4
+      - name: Create kubeconfig file
+        run: |
+          cd $HOME
+          mkdir .kube
+          echo "${{ secrets.KUBECONFIG }}" > .kube/config
+
       - name: Deploy
-        uses: WyriHaximus/github-action-helm3@v3
+        uses: helmfile/helmfile-action@v1.9.0
         with:
-          exec: |
-            RELEASE_NAME=compensations-api
-            helm repo add bitnami https://charts.bitnami.com/bitnami
-            helm upgrade --install --namespace dev-inner-circle --create-namespace --values ./Api/ci/values-custom.yaml \
-            --set "ingress.enabled=true" \
-            --set "ingress.hostname=${{ secrets.HOST }}" \
-            --set "image.tag=${{ github.sha }}" \
-            --set "extraSecretEnvVars.ConnectionStrings__DefaultConnection=${{ secrets.POSTGRESQL_CONNECTION_STRING }}" \
-            --set "extraSecretEnvVars.AuthenticationOptions__PublicSigningKey=${{ secrets.PUBLIC_SIGNING_KEY }}" \
-            --set "extraSecretEnvVars.InnerCircleServiceUrls__EmployeesServiceUrl=${{ secrets.SALARY_SERVICE_URL }}" \
-            "${RELEASE_NAME}" \
-            bitnami/aspnet-core --version 4.4.7
-          kubeconfig: "${{ secrets.KUBECONFIG }}"
+          helmfile-version: 'v0.164.0'
+          helm-version: 'v3.14.4'
+          helmfile-args: apply --namespace prod -f Api/ci/helmfile.yaml
+          helmfile-auto-init: "false"
 
   production-test:
     # Image to run project and tests
-    needs: deploy-to-prod-k8s
+    needs: deploy-to-prod
     name: Run e2e on production
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
