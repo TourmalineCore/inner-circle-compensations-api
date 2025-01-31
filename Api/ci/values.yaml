@@ -36,7 +36,7 @@ service:
 
 ingress:
   enabled: true
-  hostname: {{ secrets.HOST }}
+  hostname: ${{ secrets.HOST }}
   pathType: ImplementationSpecific
   apiVersion: ""
   path: /api/compensations(/|$)(.*)
@@ -49,7 +49,7 @@ ingress:
 extraConfigMapEnvVars: {}
 
 extraSecretEnvVars:
-  InnerCircleServiceUrls__EmployeesServiceUrl: "{{ secrets.SALARY_SERVICE_URL }}"
+  InnerCircleServiceUrls__EmployeesServiceUrl: ${{ secrets.SALARY_SERVICE_URL }}
 
 extraSecretEnvVarsEncoded: |
   {{- range $k, $v := .Values.extraSecretEnvVars }}
