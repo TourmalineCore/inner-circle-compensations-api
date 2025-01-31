@@ -16,7 +16,7 @@ Scenario: e2e test flow
 
     # Authentication
     Given url authApiRootUrl
-    And path '/auth/login'
+    And path '/api/auth/login'
     And request {"login": #(authLogin), "password": #(authPassword)}
     And method POST
     Then status 200
