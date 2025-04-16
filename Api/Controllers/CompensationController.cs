@@ -42,6 +42,13 @@ public class CompensationController : Controller
         await _compensationHardDeletionCommand.ExecuteAsync(id);
     }
 
+    [RequiresPermission(UserClaimsProvider.CanManageCompensations)]
+    [HttpDelete("{id}/soft-delete")]
+    public async Task SoftDeleteAsync([FromRoute] long id)
+    {
+        await _compensationHardDeletionCommand.ExecuteAsync(id);
+    }
+
     [RequiresPermission(UserClaimsProvider.CanRequestCompensations)]
     [HttpGet("all")]
     public async Task<PersonalCompensationListDto> GetEmployeeCompensationsAsync()
