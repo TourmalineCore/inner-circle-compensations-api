@@ -17,6 +17,7 @@ public class PersonalCompensationsQuery : IPersonalCompensationsQuery
     public Task<List<Compensation>> GetPersonalCompensationsAsync(long employeeId, long tenantId)
     {
         Console.WriteLine("Beee");
+
         return _context
             .Compensations
             .AsNoTracking()
