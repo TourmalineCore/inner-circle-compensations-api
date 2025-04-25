@@ -39,6 +39,29 @@ Scenario: e2e test flow
     # Check if there is at least one compensation type, massage is chosen as an example
     And match response contains {"typeId":6,"label":"Massage"}
 
+    # Create a wrong compensation to be deleted later
+    Given url apiRootUrl
+    And path '/api/compensations/create'
+    And request {"compensations":[{"typeId":6,"comment":"my compensation","amount":7, "quantity":1}],"compensationRequestedForYearAndMonth":"2024-01"}
+    When method POST
+    Then status 200
+    * def wrongCompensationId = response[0]
+
+    # Delete the wrong compensation
+    Given url apiRootUrl
+    And path '/api/compensations/' + wrongCompensationId + '/soft-delete'
+    When method DELETE
+    Then status 200
+
+    # Get all personal compensations - Unpaid compensation exists
+    Given url apiRootUrl
+    And path '/api/compensations/all'
+    When method GET
+    Then status 200
+    # Check if the deleted compensation is not present in the response
+    * def filtered = response.list.filter(x => x.id == wrongCompensationId)
+    * assert filtered.length == 0
+
     # Create compensation
     Given url apiRootUrl
     And path '/api/compensations/create'
