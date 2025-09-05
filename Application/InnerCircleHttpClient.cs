@@ -41,27 +41,10 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
             .Headers["Authorization"]
             .ToString();
 
-        var debugTokenHeader = _httpContextAccessor
-            .HttpContext?
-            .Request
-            .Headers["X-DEBUG-TOKEN"]
-            .ToString();
-
-        if (!string.IsNullOrEmpty(debugTokenHeader))
+        if (!string.IsNullOrEmpty(authHeader))
         {
-            // for Karate tests
-            _client.DefaultRequestHeaders.Add("X-DEBUG-TOKEN", debugTokenHeader);
+            _client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(authHeader);
         }
-        else if (!string.IsNullOrEmpty(authHeader) && authHeader.StartsWith("Bearer "))
-        {
-            var token = authHeader.Substring("Bearer ".Length).Trim();
-            //_client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-            _client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(token);
-        }
-        //if (!string.IsNullOrEmpty(token))
-        //{
-        //    _client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(token);
-        //}
 
         var response = await _client.GetStringAsync(link);
 
