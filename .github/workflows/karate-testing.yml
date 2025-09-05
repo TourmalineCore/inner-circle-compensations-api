@@ -45,6 +45,7 @@ jobs:
           API_ROOT_URL: "http://localhost:30090"
           AUTH_LOGIN: "ceo@tourmalinecore.com"
           AUTH_PASSWORD: "cEoPa$$wo1d"
+          SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "false"
   
   e2e-test-without-local-env:
     # Image to run project and tests
