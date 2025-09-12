@@ -36,15 +36,12 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
         var link = $"{_urls.EmployeesServiceUrl}/internal/get-employees";
 
         var authHeader = _httpContextAccessor
-            .HttpContext?
+            .HttpContext!
             .Request
             .Headers["Authorization"]
             .ToString();
-
-        if (!string.IsNullOrEmpty(authHeader))
-        {
-            _client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(authHeader);
-        }
+       
+        _client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(authHeader);
 
         var response = await _client.GetStringAsync(link);
 
