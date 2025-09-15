@@ -22,21 +22,6 @@
 		"AUTH_API_ROOT_URL": "http://localhost:1080",
 		"API_ROOT_URL": "http://localhost:5283",
 		"SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES": "true",
-		"REQUEST_HEADER_NAME": "Authorization"
+		"REQUEST_HEADER_NAME": "X-DEBUG-TOKEN"
 	}
-
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Uncomment the next line to run commands after the container is created.
-	// "postCreateCommand": "cat /etc/os-release",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "devcontainer"
 }
