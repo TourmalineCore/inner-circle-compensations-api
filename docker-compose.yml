@@ -79,6 +79,8 @@ services:
       AUTH_API_ROOT_URL: "http://mockServer:1080"
       API_ROOT_URL: "http://compensations-api-for-e2e"
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
+      REQUEST_HEADER_NAME: "X-DEBUG-TOKEN"
+      SALARY_SERVICE_URL: "http://mockServer:1080"
     networks:
       - compensations-network
 
@@ -97,6 +99,7 @@ services:
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "false"
       AUTH_LOGIN: ${AUTH_LOGIN}
       AUTH_PASSWORD: ${AUTH_PASSWORD}
+      REQUEST_HEADER_NAME: "Authorization"
 
 networks:
   compensations-network: {}

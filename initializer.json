@@ -31,7 +31,11 @@
   {
   "httpRequest": {
     "method": "GET",
-    "path" : "/internal/get-employees"
+    "path" : "/internal/get-employees",
+    "headers": {
+      "Authorization": ["Bearer .*"],
+      "X-DEBUG-TOKEN": [".*"]
+    }
   },
   "httpResponse": {
     "statusCode": 200,
