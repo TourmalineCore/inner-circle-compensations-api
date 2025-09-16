@@ -101,7 +101,7 @@ services:
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "false"
       AUTH_LOGIN: ${AUTH_LOGIN}
       AUTH_PASSWORD: ${AUTH_PASSWORD}
-      AUTH_REQUEST_HEADER: "Authorization"
+      AUTH_REQUEST_HEADER: ${AUTH_REQUEST_HEADER}
 
 networks:
   compensations-network: {}
