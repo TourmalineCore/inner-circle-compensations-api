@@ -37,7 +37,7 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
     {
         var link = $"{_urls.EmployeesServiceUrl}/internal/get-employees";
 
-        var header = Environment.GetEnvironmentVariable("REQUEST_HEADER_NAME");
+        var header = Environment.GetEnvironmentVariable("AUTH_REQUEST_HEADER");
 
         var token = _httpContextAccessor
             .HttpContext!
