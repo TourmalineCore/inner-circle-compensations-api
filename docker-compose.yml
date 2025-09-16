@@ -29,8 +29,6 @@ services:
     depends_on:
       compensations-db:
         condition: service_healthy
-    environment:
-      - AUTH_REQUEST_HEADER=Authorization
     networks:
       - compensations-network
 
@@ -42,7 +40,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=MockForPullRequest
       - ASPNETCORE_HTTP_PORTS=80
-      - AUTH_REQUEST_HEADER=X-DEBUG-TOKEN
   
   compensations-api-for-docker-run:
     container_name: 'compensations-api-for-docker-run'
@@ -82,7 +79,6 @@ services:
       AUTH_API_ROOT_URL: "http://mockServer:1080"
       API_ROOT_URL: "http://compensations-api-for-e2e"
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
-      AUTH_REQUEST_HEADER: "X-DEBUG-TOKEN"
     networks:
       - compensations-network
 
@@ -101,7 +97,6 @@ services:
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "false"
       AUTH_LOGIN: ${AUTH_LOGIN}
       AUTH_PASSWORD: ${AUTH_PASSWORD}
-      AUTH_REQUEST_HEADER: ${AUTH_REQUEST_HEADER}
 
 networks:
   compensations-network: {}

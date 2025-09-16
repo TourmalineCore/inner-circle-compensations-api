@@ -2,10 +2,9 @@ using System.Net.Http.Headers;
 using Application.Services.Options;
 using Core;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualBasic;
 using Newtonsoft.Json;
+using TourmalineCore.AspNetCore.JwtAuthentication.Core.Options;
 
 namespace Application;
 
@@ -13,15 +12,18 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
 {
     private readonly HttpClient _client;
     private readonly InnerCircleServiceUrls _urls;
+    private readonly AuthenticationOptions _authOptions;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     public InnerCircleHttpClient(
         IOptions<InnerCircleServiceUrls> urls,
+        IOptions<AuthenticationOptions> authOptions,
         IHttpContextAccessor httpContextAccessor
     )
     {
         _client = new HttpClient();
         _urls = urls.Value;
+        _authOptions = authOptions.Value;
         _httpContextAccessor = httpContextAccessor;
     }
 
@@ -37,20 +39,24 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
     {
         var link = $"{_urls.EmployeesServiceUrl}/internal/get-employees";
 
-        var header = Environment.GetEnvironmentVariable("AUTH_REQUEST_HEADER");
-
-        var token = _httpContextAccessor
+        var request = _httpContextAccessor
             .HttpContext!
-            .Request
-            .Headers[header]
-            .ToString();
+            .Request;
 
-        if (header == "X-DEBUG-TOKEN")
+        if (_authOptions.IsDebugTokenEnabled)
         {
+            var token = request
+                .Headers["X-DEBUG-TOKEN"]
+                .ToString();
+
             _client.DefaultRequestHeaders.Add("X-DEBUG-TOKEN", token.Replace("Bearer ", ""));
         }
         else
         {
+            var token = request
+                .Headers["Authorization"]
+                .ToString();
+                
             _client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(token);
         }
 
