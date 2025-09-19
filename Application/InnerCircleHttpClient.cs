@@ -41,7 +41,7 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
 
         var request = _httpContextAccessor
             .HttpContext!
-            .Request;
+            .Request; 
 
         if (_authOptions.IsDebugTokenEnabled)
         {
