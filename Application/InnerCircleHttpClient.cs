@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using Application.Services.Options;
 using Core;
 using Microsoft.AspNetCore.Http;
