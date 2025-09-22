@@ -39,26 +39,15 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
     {
         var link = $"{_urls.EmployeesServiceUrl}/internal/get-employees";
 
-        var request = _httpContextAccessor
+        var headerName = _authOptions.IsDebugTokenEnabled ? "X-DEBUG-TOKEN" : "Authorization";
+
+        var token = _httpContextAccessor
             .HttpContext!
-            .Request;
+            .Request
+            .Headers[headerName]
+            .ToString();
 
-        if (_authOptions.IsDebugTokenEnabled)
-        {
-            var token = request
-                .Headers["X-DEBUG-TOKEN"]
-                .ToString();
-
-            _client.DefaultRequestHeaders.Add("X-DEBUG-TOKEN", token.Replace("Bearer ", ""));
-        }
-        else
-        {
-            var token = request
-                .Headers["Authorization"]
-                .ToString();
-                
-            _client.DefaultRequestHeaders.Authorization = AuthenticationHeaderValue.Parse(token);
-        }
+        _client.DefaultRequestHeaders.Add(headerName, token);
 
         var response = await _client.GetStringAsync(link);
 
