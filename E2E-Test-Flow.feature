@@ -85,8 +85,8 @@ Scenario: e2e test flow
     # Get all employees compensations to check
     Given url apiRootUrl
     And path '/api/compensations/admin/all'
-    And param year = 2023
-    And param month = 12
+    And param year = new Date().getFullYear()
+    And param month = new Date().getMonth() + 1
     When method GET
     Then status 200
 

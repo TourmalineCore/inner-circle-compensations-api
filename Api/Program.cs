@@ -81,11 +81,11 @@ const string LoggingSectionKey = "Logging";
 var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
 var logging = builder.Logging;
 
-// if (isWindows)
-// {
-//     logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
-//     logging.AddEventLog();
-// }
+if (isWindows)
+{
+    logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
+    logging.AddEventLog();
+}
 
 logging.AddConfiguration(builder.Configuration.GetSection(LoggingSectionKey));
 logging.AddConsole();
