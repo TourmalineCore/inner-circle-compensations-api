@@ -82,6 +82,14 @@ Scenario: e2e test flow
     And newCompensation.isPaid == false
     And newCompensation.quantity == 1
 
+    # Get all employees compensations to check
+    Given url apiRootUrl
+    And path '/api/compensations/admin/all'
+    And param year = 2023
+    And param month = 12
+    When method GET
+    Then status 200
+
     # Update compensation status
     Given url apiRootUrl
     And path '/api/compensations/mark-as-paid'

@@ -9,5 +9,4 @@ public class Employee
     public string CorporateEmail { get; set; }
 
     public long TenantId { get; set; }
-
 }
