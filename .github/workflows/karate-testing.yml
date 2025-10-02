@@ -7,6 +7,11 @@ on:
   pull_request:
 
 jobs:
+  push_to_registry:
+    uses: ./.github/workflows/docker-build-and-push.yml
+    # without this it cannot login to the registry
+    secrets: inherit
+
   e2e-test-with-local-env:
     runs-on: ubuntu-22.04
     steps:
