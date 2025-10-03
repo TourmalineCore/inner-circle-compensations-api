@@ -2,7 +2,7 @@
   {
     "httpRequest": {
       "method": "POST",
-      "path": "/api/auth/login"
+      "path": "/auth/login"
     },
     "httpResponse": {
         "statusCode": 200,
