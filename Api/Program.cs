@@ -5,7 +5,6 @@ using Application;
 using Application.Services.Options;
 using DataAccess;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging.EventLog;
 using Microsoft.OpenApi.Models;
 using TourmalineCore.AspNetCore.JwtAuthentication.Core;
@@ -15,58 +14,64 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("CompensationsSpecificOrigins",
-                      policy =>
-                      {
-                          policy.WithOrigins("*")
-                          .AllowAnyHeader().AllowAnyMethod();
-                      });
+  options.AddPolicy("CompensationsSpecificOrigins",
+    policy =>
+    {
+      policy
+        .WithOrigins("*")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
 });
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo
+  c.SwaggerDoc("v1", new OpenApiInfo
+  {
+    Title = "My API",
+    Version = "v1"
+  });
+
+  c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+  {
+    In = ParameterLocation.Header,
+    Description = "Please insert JWT with Bearer into field",
+    Name = "Authorization",
+    Type = SecuritySchemeType.ApiKey
+  });
+
+  c.AddSecurityRequirement(new OpenApiSecurityRequirement
+  {
     {
-        Title = "My API",
-        Version = "v1"
-    });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        In = ParameterLocation.Header,
-        Description = "Please insert JWT with Bearer into field",
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+      new OpenApiSecurityScheme
+      {
+        Reference = new OpenApiReference
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] { }
+          Type = ReferenceType.SecurityScheme,
+          Id = "Bearer"
         }
-    });
+      },
+      new string[] { }
+    }
+  });
 });
 
 var env = builder.Environment;
 var configuration = builder.Configuration;
 var reloadOnChange = configuration.GetValue("hostBuilder:reloadConfigOnChange", true);
 
-configuration.AddJsonFile("appsettings.json", true, reloadOnChange)
-    .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, reloadOnChange)
-    .AddJsonFile("appsettings.Active.json", true, reloadOnChange)
-    .AddJsonFile("swagger.json", true, reloadOnChange);
+configuration
+  .AddJsonFile("appsettings.json", true, reloadOnChange)
+  .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true, reloadOnChange)
+  .AddJsonFile("appsettings.Active.json", true, reloadOnChange)
+  .AddJsonFile("swagger.json", true, reloadOnChange);
 
 if (env.IsDevelopment() && !string.IsNullOrEmpty(env.ApplicationName))
 {
-    var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
-    configuration.AddUserSecrets(appAssembly, true);
+  var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+  configuration.AddUserSecrets(appAssembly, true);
 }
 
 configuration.AddEnvironmentVariables();
@@ -74,7 +79,9 @@ configuration.AddCommandLine(args);
 
 var authenticationOptions = configuration.GetSection(nameof(AuthenticationOptions)).Get<AuthenticationOptions>();
 builder.Services.Configure<AuthenticationOptions>(configuration.GetSection(nameof(AuthenticationOptions)));
-builder.Services.AddJwtAuthentication(authenticationOptions).WithUserClaimsProvider<UserClaimsProvider>(UserClaimsProvider.PermissionClaimType);
+builder.Services
+  .AddJwtAuthentication(authenticationOptions)
+  .WithUserClaimsProvider<UserClaimsProvider>(UserClaimsProvider.PermissionClaimType);
 builder.Services.AddPersistence(configuration);
 
 const string LoggingSectionKey = "Logging";
@@ -83,8 +90,8 @@ var logging = builder.Logging;
 
 if (isWindows)
 {
-    logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
-    logging.AddEventLog();
+  logging.AddFilter<EventLogLoggerProvider>(level => level >= LogLevel.Warning);
+  logging.AddEventLog();
 }
 
 logging.AddConfiguration(builder.Configuration.GetSection(LoggingSectionKey));
@@ -94,11 +101,10 @@ logging.AddEventSourceLogger();
 
 logging.Configure(options =>
 {
-    options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId
-                                      | ActivityTrackingOptions.TraceId
-                                      | ActivityTrackingOptions.ParentId;
-}
-    );
+  options.ActivityTrackingOptions = ActivityTrackingOptions.SpanId
+    | ActivityTrackingOptions.TraceId
+    | ActivityTrackingOptions.ParentId;
+});
 
 builder.Services.AddApplication();
 builder.Services.AddPersistence(configuration);
@@ -113,14 +119,14 @@ app.ConfigureExceptionHandler();
 
 app.UseSwaggerUI(options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    options.RoutePrefix = string.Empty;
+  options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+  options.RoutePrefix = string.Empty;
 });
 
 using (var serviceScope = app.Services.CreateScope())
 {
-    var context = serviceScope.ServiceProvider.GetRequiredService<CompensationsDbContext>();
-    await context.Database.MigrateAsync();
+  var context = serviceScope.ServiceProvider.GetRequiredService<CompensationsDbContext>();
+  await context.Database.MigrateAsync();
 }
 
 app.UseRouting();

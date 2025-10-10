@@ -8,19 +8,21 @@ namespace DataAccess.Mapping;
 
 public class CompensationMapping : IEntityTypeConfiguration<Compensation>
 {
-    public void Configure(EntityTypeBuilder<Compensation> builder)
-    {
-        var instantConverter =
-        new ValueConverter<Instant, DateTime>(v =>
-         v.ToDateTimeUtc(),
-         v => Instant.FromDateTimeUtc(v));
+  public void Configure(EntityTypeBuilder<Compensation> builder)
+  {
+    var instantConverter = new ValueConverter<Instant, DateTime>(v =>
+      v.ToDateTimeUtc(),
+      v => Instant.FromDateTimeUtc(v)
+    );
 
-        builder.Property(e => e.CompensationRequestedAtUtc)
-            .HasConversion(instantConverter);
+    builder
+      .Property(e => e.CompensationRequestedAtUtc)
+      .HasConversion(instantConverter);
 
-        builder.Property(e => e.Quantity)
-            .HasDefaultValue(1);
-        //builder.Property(e => e.CompensationRequestedForYearAndMonth)
-        //    .HasConversion(instantConverter);
-    }
+    builder
+      .Property(e => e.Quantity)
+      .HasDefaultValue(1);
+    //builder.Property(e => e.CompensationRequestedForYearAndMonth)
+    //  .HasConversion(instantConverter);
+  }
 }
