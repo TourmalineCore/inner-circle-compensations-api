@@ -55,6 +55,7 @@ public class CompensationController : Controller
   public async Task<PersonalCompensationListDto> GetEmployeeCompensationsAsync()
   {
     var employee = await _client.GetEmployeeAsync(User.GetCorporateEmail());
+    Console.WriteLine($"{employee.FullName} *****");
     return await _compensationsService.GetEmployeeCompensationsAsync(employee, User.GetTenantId());
   }
 

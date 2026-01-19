@@ -10,12 +10,12 @@ namespace Application;
 public class InnerCircleHttpClient : IInnerCircleHttpClient
 {
   private readonly HttpClient _client;
-  private readonly InnerCircleServiceUrls _urls;
+  private readonly ExternalDepsUrls _urls;
   private readonly AuthenticationOptions _authOptions;
   private readonly IHttpContextAccessor _httpContextAccessor;
 
   public InnerCircleHttpClient(
-    IOptions<InnerCircleServiceUrls> urls,
+    IOptions<ExternalDepsUrls> urls,
     IOptions<AuthenticationOptions> authOptions,
     IHttpContextAccessor httpContextAccessor
   )
@@ -29,8 +29,9 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
   public async Task<Employee> GetEmployeeAsync(string corporateEmail)
   {
     var link = $"{_urls.EmployeesServiceUrl}/internal/get-employee?corporateEmail={corporateEmail}";
+    Console.WriteLine($"**************** {link}");
     var response = await _client.GetStringAsync(link);
-
+   
     return JsonConvert.DeserializeObject<Employee>(response);
   }
 
