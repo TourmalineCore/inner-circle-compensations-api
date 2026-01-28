@@ -30,7 +30,7 @@ public class InnerCircleHttpClient : IInnerCircleHttpClient
   {
     var link = $"{_urls.EmployeesServiceUrl}/internal/get-employee?corporateEmail={corporateEmail}";
     var response = await _client.GetStringAsync(link);
-   
+
     return JsonConvert.DeserializeObject<Employee>(response);
   }
 
