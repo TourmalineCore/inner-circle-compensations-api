@@ -19,8 +19,10 @@
 		}
 	},
 	"containerEnv": {
-		"AUTH_API_ROOT_URL": "http://localhost:1080",
-		"API_ROOT_URL": "http://localhost:5283",
+		"AUTH_FIRST_TENANT_LOGIN_WITH_ALL_PERMISSIONS": "first-tenant-login-with-all-permissions",
+		"AUTH_FIRST_TENANT_PASSWORD_WITH_ALL_PERMISSIONS": "first-tenant-password-with-all-permissions",
+		"AUTH_API_ROOT_URL": "http://localhost:8508/api/auth",
+		"API_ROOT_URL": "http://localhost:6508/api/compensations",
 		"SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES": "true"
 	}
 }

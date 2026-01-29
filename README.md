@@ -19,7 +19,7 @@ Note: If you already has this network, skip this step
 
 To start the service, you should go to the solution folder and enter this command in the terminal. This command starts the service in Docker and raises the database.
 ```
-docker-compose --profile ide-run up -d
+docker compose --profile MockForPullRequest up -d
 ```
 To run the project use the keyboard shortcut `Ctrl+F5` (or `Cmd+F5` for Mac)
 

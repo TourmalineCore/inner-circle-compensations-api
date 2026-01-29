@@ -10,12 +10,12 @@ namespace Application;
 public class InnerCircleHttpClient : IInnerCircleHttpClient
 {
   private readonly HttpClient _client;
-  private readonly InnerCircleServiceUrls _urls;
+  private readonly ExternalDepsUrls _urls;
   private readonly AuthenticationOptions _authOptions;
   private readonly IHttpContextAccessor _httpContextAccessor;
 
   public InnerCircleHttpClient(
-    IOptions<InnerCircleServiceUrls> urls,
+    IOptions<ExternalDepsUrls> urls,
     IOptions<AuthenticationOptions> authOptions,
     IHttpContextAccessor httpContextAccessor
   )

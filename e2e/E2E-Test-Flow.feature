@@ -3,21 +3,26 @@ Feature: Test Flow
 # https://github.com/karatelabs/karate?tab=readme-ov-file#karate-fork
 
 Background:
-* url 'http://localhost:1080/mockServer/verify'
 * header Content-Type = 'application/json'
 
 Scenario: e2e test flow
 
-    * def jsUtils = read('jsUtils.js')
+    * def jsUtils = read('./js-utils.js')
     * def authApiRootUrl = jsUtils().getEnvVariable('AUTH_API_ROOT_URL')
     * def apiRootUrl = jsUtils().getEnvVariable('API_ROOT_URL')
-    * def authLogin = jsUtils().getEnvVariable('AUTH_LOGIN')
-    * def authPassword = jsUtils().getEnvVariable('AUTH_PASSWORD')
+    * def authLogin = jsUtils().getEnvVariable('AUTH_FIRST_TENANT_LOGIN_WITH_ALL_PERMISSIONS')
+    * def authPassword = jsUtils().getEnvVariable('AUTH_FIRST_TENANT_PASSWORD_WITH_ALL_PERMISSIONS')
 
     # Authentication
     Given url authApiRootUrl
-    And path '/auth/login'
-    And request {"login": #(authLogin), "password": #(authPassword)}
+    And path '/login'
+    And request
+    """
+    {
+        "login": "#(authLogin)",
+        "password": "#(authPassword)"
+    }
+    """
     And method POST
     Then status 200
 
@@ -27,13 +32,13 @@ Scenario: e2e test flow
 
     # Get all personal compensations - No compensations
     Given url apiRootUrl
-    And path '/api/compensations/all'
+    And path '/all'
     And method GET
     Then status 200
 
     # Get types
     Given url apiRootUrl
-    And path '/api/compensations/types'
+    And path '/types'
     When method GET
     Then status 200
     # Check if there is at least one compensation type, massage is chosen as an example
@@ -41,7 +46,7 @@ Scenario: e2e test flow
 
     # Create a wrong compensation to be deleted later
     Given url apiRootUrl
-    And path '/api/compensations/create'
+    And path '/create'
     And request {"compensations":[{"typeId":6,"comment":"my compensation","amount":7, "quantity":1}],"compensationRequestedForYearAndMonth":"2024-01"}
     When method POST
     Then status 200
@@ -49,13 +54,13 @@ Scenario: e2e test flow
 
     # Delete the wrong compensation
     Given url apiRootUrl
-    And path '/api/compensations/' + wrongCompensationId + '/soft-delete'
+    And path '/' + wrongCompensationId + '/soft-delete'
     When method DELETE
     Then status 200
 
     # Get all personal compensations - Unpaid compensation exists
     Given url apiRootUrl
-    And path '/api/compensations/all'
+    And path '/all'
     When method GET
     Then status 200
     # Check if the deleted compensation is not present in the response
@@ -64,7 +69,7 @@ Scenario: e2e test flow
 
     # Create compensation
     Given url apiRootUrl
-    And path '/api/compensations/create'
+    And path '/create'
     And request {"compensations":[{"typeId":6,"comment":"my compensation","amount":700, "quantity":1}],"compensationRequestedForYearAndMonth":"2023-12"}
     When method POST
     Then status 200
@@ -72,7 +77,7 @@ Scenario: e2e test flow
 
     # Get all personal compensations - Unpaid compensation exists
     Given url apiRootUrl
-    And path '/api/compensations/all'
+    And path '/all'
     When method GET
     Then status 200
     # Check if the new compensation is present in the response
@@ -84,7 +89,7 @@ Scenario: e2e test flow
 
     # Get all employees compensations to check
     Given url apiRootUrl
-    And path '/api/compensations/admin/all'
+    And path '/admin/all'
     And param year = new Date().getFullYear()
     And param month = new Date().getMonth() + 1
     When method GET
@@ -92,14 +97,14 @@ Scenario: e2e test flow
 
     # Update compensation status
     Given url apiRootUrl
-    And path '/api/compensations/mark-as-paid'
+    And path '/mark-as-paid'
     And request [#(newId)]
     When method PUT
     Then status 200
 
     # Get all personal compensations - Paid compensation exists
     Given url apiRootUrl
-    And path '/api/compensations/all'
+    And path '/all'
     When method GET
     Then status 200
     # Check that the new compensation has isPaid = true

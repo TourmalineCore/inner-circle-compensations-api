@@ -1,104 +1,98 @@
 services:
-  compensations-db:
-    container_name: 'compensations-db'
-    image: postgres:14.2-alpine
-    profiles: ['MockForDevelopment', 'db-only', 'MockForPullRequest']
-    restart: always
+
+  inner-circle-compensations-api-db:
+    image: postgres:14
+    container_name: inner-circle-compensations-api-db
+    profiles:
+      - DbOnly
+      - MockForDevelopment
+      - MockForTests
+      - MockForPullRequest
     environment:
+      POSTGRES_DB: inner-circle-compensations-api-db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: compensations-db
+    ports:
+     - 7508:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-    ports:
-      - 10005:5432
     networks:
-      - compensations-network
-
-  compensations-api:
-    profiles: ['default']
-    container_name: 'compensations-api'
-    build:
-      context: .
-      dockerfile: Api/Dockerfile
-    ports:
-      - 10006:80
+      - inner-circle-compensations-api-network
+  
+  inner-circle-compensations-api:
+    container_name: inner-circle-compensations-api
+    profiles:
+      - MockForTests
+      - MockForPullRequest
     depends_on:
-      compensations-db:
+      inner-circle-compensations-api-db:
         condition: service_healthy
-    networks:
-      - compensations-network
-
-  compensations-api-for-e2e:
-    container_name: 'compensations-api-for-e2e'
-    profiles: ['MockForPullRequest']
-    extends:
-      service: compensations-api
+      inner-circle-compensations-api-mock-server:
+        condition: service_started
+    build:
+      dockerfile: ./Api/Dockerfile
+      context: .
+      args:
+        EXCLUDE_UNIT_TESTS_FROM_BUILD: "true"
     environment:
       - ASPNETCORE_ENVIRONMENT=MockForPullRequest
       - ASPNETCORE_HTTP_PORTS=80
-  
-  compensations-api-for-docker-run:
-    container_name: 'compensations-api-for-docker-run'
-    profiles: ['MockForDevelopment']
-    extends:
-      service: compensations-api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=MockForDevelopment
+    ports:
+      - 6508:80
+    networks:
+      - inner-circle-compensations-api-network
 
-  mockServer:
-    container_name: 'mockServer'
-    profiles: ['MockForPullRequest']
+  inner-circle-compensations-api-mock-server:
+    container_name: 'inner-circle-compensations-api-mock-server'
+    profiles:
+      - MockForDevelopment
+      - MockForTests
+      - MockForPullRequest
     image: mockserver/mockserver:5.15.0
     command: -logLevel INFO
     ports:
-      - 1080:1080
+       - 8508:1080
     volumes:
-      - ./initializer.json:/config/initializer.json
+      # this is needed so that we can spin it up from within Dev Container where LOCAL_WORKSPACE_FOLDER is defined and from a simple OS terminal of the repo root
+      - ${LOCAL_WORKSPACE_FOLDER:-.}/e2e/mock-server-initialization.json:/config/mock-server-initialization.json
     environment:
-      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/initializer.json
+      SERVER_PORT: 1080
+      MOCKSERVER_INITIALIZATION_JSON_PATH: /config/mock-server-initialization.json
     networks:
-      - compensations-network
+      - inner-circle-compensations-api-network
 
-  karate-tests:
-    container_name: 'karate-tests'
-    profiles: ['MockForPullRequest']
+  inner-circle-compensations-api-karate-tests:
+    container_name: 'inner-circle-compensations-api-karate-tests'
+    profiles:
+      - MockForPullRequest
     build:
-      dockerfile: KarateDockerfile
-      context: .
+      dockerfile: ./KarateDockerfile
+      context: ./e2e
+    # service_started is not what we need, we need deps to be healthy and ready, this needs to be implemented in api and mock-server first 
     depends_on:
-      - compensations-api-for-e2e
-      - mockServer
+      inner-circle-compensations-api:
+        condition: service_started
+      inner-circle-compensations-api-mock-server:
+        condition: service_started
+    # restart twice in case of not ready db or network failures
+    restart: on-failure:2
     command: ["karate", "/karate"]
     volumes:
-      - .:/karate
+      # similar to mock-server volumes we need to support both runs: from Dev Container and from OS
+      - ${LOCAL_WORKSPACE_FOLDER:-.}:/karate
+    
     environment:
-      AUTH_API_ROOT_URL: "http://mockServer:1080"
-      API_ROOT_URL: "http://compensations-api-for-e2e"
+      AUTH_FIRST_TENANT_LOGIN_WITH_ALL_PERMISSIONS: "first-tenant-login-with-all-permissions"
+      AUTH_FIRST_TENANT_PASSWORD_WITH_ALL_PERMISSIONS: "first-tenant-password-with-all-permissions"
+      # here the port is 1080 because it needs to be an internal port, not an external which is 8504 in this case
+      AUTH_API_ROOT_URL: "http://inner-circle-compensations-api-mock-server:1080/api/auth"
+      API_ROOT_URL: "http://inner-circle-compensations-api/api/compensations"
       SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "true"
     networks:
-      - compensations-network
-
-  production-karate-tests:
-    container_name: 'production-karate-tests'
-    profiles: ['production-e2e-tests']
-    build:
-      dockerfile: KarateDockerfile
-      context: .
-    command: ["karate", "/karate"]
-    volumes:
-      - .:/karate
-    environment:
-      AUTH_API_ROOT_URL: "https://innercircle.tourmalinecore.com/api"
-      API_ROOT_URL: "https://innercircle.tourmalinecore.com"
-      SHOULD_USE_FAKE_EXTERNAL_DEPENDENCIES: "false"
-      AUTH_LOGIN: ${AUTH_LOGIN}
-      AUTH_PASSWORD: ${AUTH_PASSWORD}
+      - inner-circle-compensations-api-network
 
 networks:
-  compensations-network: {}
-  ic-backend-deb:
-    external: true
+  inner-circle-compensations-api-network:
